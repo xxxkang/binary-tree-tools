@@ -7,11 +7,9 @@ let start = svgContainer.attr("width") / 2;
 
 document.getElementById('array').onsubmit = function(evt) {
   evt.preventDefault();
-  let arr = evt.target.array.value.trim().split(/\s+/g);
-  newArr = arr.map(function(n) { return parseInt(n)})
-  makeHeap(newArr, newArr.length);
-  console.log('after heapify', newArr);
-  createNodes(newArr, start, 50, 40);
+  let arr = evt.target.array.value.trim().split(/\s+/g).map(function(n) { return parseInt(n)})
+  makeHeap(arr, arr.length);
+  createNodes(arr, start, 50, 40);
 }
 
 function createNodes(arr, cx, cy, radius) {
@@ -24,11 +22,10 @@ function createNodes(arr, cx, cy, radius) {
   while (i < arr.length) {
 
     let row = Math.ceil(Math.log2(i + 2)) - 1;
-    console.log('i', i, 'row', row, 'parent', parent(i), 'value', arr[i], nodeData);
 
     if (i == leftChild(parent(i))) {
         node = {
-          "cx": nodeData[parent(i)].cx - xSpacing * (1/row),
+          "cx": nodeData[parent(i)].cx - xSpacing * ((1/row) * .85 ),
           "cy": nodeData[parent(i)].cy + ySpacing,
           "radius": radius,
           "color": "blue",
@@ -37,7 +34,7 @@ function createNodes(arr, cx, cy, radius) {
     }
     else if (i == rightChild(parent(i))) {
         node = {
-          "cx": nodeData[parent(i)].cx + xSpacing * (1/row),
+          "cx": nodeData[parent(i)].cx + xSpacing * ((1/row) * .85 ),
           "cy": nodeData[parent(i)].cy + ySpacing,
           "radius": radius,
           "color": "blue",
