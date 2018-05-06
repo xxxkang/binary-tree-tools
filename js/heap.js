@@ -64,3 +64,16 @@ function makeHeap(arr) {
   }
   return arr;
 }
+
+function heapSort(arr) {
+
+  let unsortedArrLength = arr.length;
+
+  while (unsortedArrLength > 1) {
+    --unsortedArrLength;
+    swap(arr, 0, unsortedArrLength);
+    reheapifyDown(arr, unsortedArrLength);
+  }
+
+  return arr;
+}
