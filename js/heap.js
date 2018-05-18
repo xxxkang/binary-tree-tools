@@ -7,7 +7,7 @@ function reheapifyDown(arr, length) {
   //has at least a left child. The test to see whether the current element has a left
   //child is leftChild(index) < length
   while (!isHeap && leftChild(index) < length) {
-    console.log(arr);
+    // console.log(arr);
     if (rightChild(index) >= length) {   //no right child
       bigChildIndex = leftChild(index);
     }
@@ -66,7 +66,6 @@ function makeHeap(arr) {
 }
 
 function heapSort(arr) {
-
   let unsortedArrLength = arr.length;
 
   while (unsortedArrLength > 1) {
@@ -74,6 +73,6 @@ function heapSort(arr) {
     swap(arr, 0, unsortedArrLength);
     reheapifyDown(arr, unsortedArrLength);
   }
-
   return arr;
 }
+
