@@ -1,21 +1,16 @@
 var svgContainer = d3.select("body")
-                      .append("div")
-                      .classed("svg-container", true)
                       .append("svg")
-                        .attr("preserveAspectRatio", "xMinYMin meet")
-                        .attr("viewBox", "0 0 600 400")
-                        .classed("svg-content-responsive", true)
+                        .attr("width", 1200)
+                        .attr("height", 400);
 
 var arrayContainer = d3.select("body")
                       .append("svg")
-                      .attr("width", 0)
-                      .attr("height", 0);
+                      .attr("width", 800)
+                      .attr("height", 500);
 
-// let start = svgContainer.attr("width") / 2;
-let start = document.getElementsByClassName("svg-container")[0].offsetWidth / 2;
+let start = svgContainer.attr("width") / 2;
 
-console.log('svgContainer width', document.getElementsByClassName("svg-container")[0].offsetWidth);
-// console.log(svgContainer.attr('width'))
+console.log(svgContainer.attr("width"));
 
 document.getElementById('array').onsubmit = function(evt) {
   svgContainer.selectAll("circle").remove();
@@ -28,7 +23,7 @@ document.getElementById('array').onsubmit = function(evt) {
   if (evt.target.array.value !== '') {
     let arr = evt.target.array.value.trim().split(/\s+|\,+/g).map(function(n) { return parseInt(n)})
     makeHeap(arr, arr.length);
-    createNodes(arr, start, 50, 35);
+    createNodes(arr, start, 200, 35);
     createArray(arr, 0, 0, 50, 50);
   }
 }

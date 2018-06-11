@@ -23,7 +23,8 @@ function createNodes(arr, cx, cy, radius) {
   let xSpacing = 300;
   let ySpacing = 100;
   let nodeData = [];
-
+  svgContainer.append("h3")
+              .text("Heap Binary Tree")
   nodeData.push({ "cx": cx, "cy": cy, "radius": radius, "color": "blue", "value": arr[0]})
   let i = 1;
 
