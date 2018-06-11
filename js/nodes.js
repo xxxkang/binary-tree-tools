@@ -1,7 +1,29 @@
+function removeHighlight() {
+  d3.selectAll("circle").attr("fill", "blue")
+  d3.selectAll("rect").attr("fill", "blue")
+  d3.selectAll("text.circle").attr("fill", "white")
+  d3.selectAll("text.value").attr("fill", "white")
+}
+
+function addHighlight(data, index) {
+  removeHighlight();
+  // d3.select(this).attr("fill", "lightblue");
+  var selectedCircle = d3.selectAll("circle").select(function(d, i) {return i == index ? this : null})
+  var selectedElement = d3.selectAll("rect").select(function(d, i) { return i == index ? this : null })
+  var selectedCircleText = d3.selectAll("text.circle").select(function(d, i) { return i == index ? this : null })
+  var selectedElementText = d3.selectAll("text.value").select(function(d, i) { return i == index ? this : null })
+
+  selectedCircle.attr("fill", "lightblue");
+  selectedElement.attr("fill", "lightblue");
+  selectedCircleText.attr("fill", "black");
+  selectedElementText.attr("fill", "black");
+}
+
 function createNodes(arr, cx, cy, radius) {
   let xSpacing = 300;
   let ySpacing = 100;
   let nodeData = [];
+
   nodeData.push({ "cx": cx, "cy": cy, "radius": radius, "color": "blue", "value": arr[0]})
   let i = 1;
 
@@ -32,91 +54,94 @@ function createNodes(arr, cx, cy, radius) {
   }
 
   var nodes = svgContainer.selectAll("circle")
-    .data(nodeData)
-    .enter()
-    .append("circle");
+                            .data(nodeData)
+                            .enter()
+                            .append("circle")
+                            .on("click", addHighlight);
 
   var nodeAttributes = nodes
-    .attr("cy", function(c) { return c.cy })
-    .attr("cx", function(c) { return c.cx })
-    .attr("r", function(c) { return c.radius })
-    .attr("fill", function(c) { return c.color });
+                        .attr("cy", function(c) { return c.cy })
+                        .attr("cx", function(c) { return c.cx })
+                        .attr("r", function(c) { return c.radius })
+                        .attr("fill", function(c) { return c.color });
 
-  var text = svgContainer.selectAll("text")
-    .data(nodeData)
-    .enter()
-    .append("text");
+  var texts = svgContainer.selectAll("text.circle")
+                            .data(nodeData)
+                            .enter()
+                            .append("text")
+                            .attr("class", "circle");
 
-  var values = text
-    .attr("x", function(d) { return d.cx} )
-    .attr("y", function(d) { return d.cy })
-    .text(function (d) { return d.value })
-    .attr("fill", "white")
-    .attr("font-family", "sans-serif")
-    .attr("font-size", "15px");
+  var values = texts
+                .attr("x", function(d) { return d.cx} )
+                .attr("y", function(d) { return d.cy })
+                .text(function (d) { return d.value })
+                .attr("fill", "white")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "15px");
 
-  d3.selectAll("circle")
-    .transition()
-    .attr("cx", function(d) { return d.cx })
-    .attr("cy", function(d) { return d.cy })
+  d3.selectAll("circle").transition()
+                          .attr("cx", function(d) { return d.cx })
+                          .attr("cy", function(d) { return d.cy })
 
-  d3.selectAll("text")
-    .transition()
-    .attr("x", function(d) { return d.cx - 10 })
-    .attr("y", function(d) { return d.cy + 5 })
+  d3.selectAll("text").transition()
+                        .attr("x", function(d) { return d.cx - 10 })
+                        .attr("y", function(d) { return d.cy + 5 })
 
-    console.log('after adding nodes', nodeData);
 
-    document.getElementById('sort').addEventListener("click", function() {
-      nodeHeapSort(nodeData);
-    })
+  document.getElementById('sort').addEventListener("click", function() {
+    nodeHeapSort(nodeData);
+  })
 
-    return nodeData;
+  return nodeData;
 }
 
-function nodeHeapSort(arr) {
-  let counter = 0;
-  let unsortedArrLength = arr.length;
+function createArray(arr, x, y, width, height) {
 
-  while (unsortedArrLength > 5) {
-    --unsortedArrLength;
-    // let temp = arr[0].value;
-    // arr[0].value = arr[unsortedArrLength].value;
-    // arr[unsortedArrLength].value = temp;
-    // let firstNode = svgContainer.selectAll("circle").filter(function(d, i) { return i == 0 });
-    // let lastNode = svgContainer.selectAll("circle").filter(function(d,i) { return i == unsortedArrLength})
-    // lastNode.transition().remove();
-    // console.log('last node', lastNode.data())
-    // let tempNode = firstNode;
-    // firstNode.attr('value', function(d) { return lastNode.data().value });
-    // lastNode.attr('value', function(d) { return tempNode.data().value });
+  var arrayData = arr.map(value => {
+    return { x: x += 60, y: y, width: width, height: height, color: 'blue', value: value}
+  })
 
-    // console.log("arr after swap", arr)
-    // svgContainer.selectAll("circle").data(arr);
-    counter = nodeTransition(true, arr, unsortedArrLength, 0, counter);
-    // counter+= 2;
-    console.log('counter in nodeHeapSort', counter);
-    // svgContainer.selectAll("circle").filter(function(d, i) { return i == unsortedArrLength }).data(lastNode.data()).exit().remove();
-    // arr = arr.slice(0, unsortedArrLength);
-    // console.log('arr', arr)
-    console.log('text', svgContainer.selectAll("text").data())
-    // svgContainer.selectAll("circle").data(arr).exit().remove();
-    // svgContainer.selectAll("circle").exit
-    // let nodes = svgContainer.selectAll("circle").data(arr);
-    // let texts = svgContainer.selectAll("text").data(arr);
-    // nodes.transition().delay(2000).remove();
-    // texts.transition().delay(2000).remove();
-    // counter = reheapifyNodesDown(arr, unsortedArrLength, counter);
-    console.log('reheapified', svgContainer.selectAll("circle").data());
-    // svgContainer.selectAll("circle").data(arr).exit().remove();
-    // svgContainer.selectAll("circle").exit().remove();
-    // console.log('all circles in container', svgContainer.selectAll("circle"))
-    // let nodes = svgContainer.selectAll("circle").data(arr);
-    // let texts = svgContainer.selectAll("text").data(arr);
-    // nodes.transition().delay(2000).remove();
-    // texts.transition().delay(2000).remove();
-  }
-};
+  var elementsArr = arrayContainer.selectAll("rect")
+                                  .data(arrayData)
+                                  .enter()
+                                  .append("rect");
+
+  var elementAttributes = elementsArr
+                          .attr("x", function(r) { return r.x })
+                          .attr("y", function(r) { return r.y })
+                          .attr("width", function(r) { return r.width })
+                          .attr("height", function(r) { return r.height })
+                          .attr("fill", function(r) { return r.color });
+
+  var arrTextValues = arrayContainer.selectAll("text.value")
+                          .data(arrayData)
+                          .enter()
+                          .append("text")
+                          .attr("class", "value")
+                          .attr("x", function(d) { return d.x + 15} )
+                          .attr("y", function(d) { return d.y + 30 })
+                          .text(function (d) { return d.value })
+                          .attr("fill", "white")
+                          .attr("font-family", "sans-serif")
+                          .attr("font-size", "15px");
+
+  var arrTextIndices = arrayContainer.selectAll("text.index")
+                              .data(arrayData)
+                              .enter()
+                              .append("text")
+                              .attr("class", "index")
+                              .text(function(d, i) { return i})
+                              .attr("x", function(d) { return d.x + 15 })
+                              .attr("y", function(d) { return d.y - 15 })
+                              .attr("fill", "black")
+                              .attr("font-family", "sans-serif")
+                              .attr("font-size", "15px")
+
+  removeHighlight();
+
+
+  return arrayData;
+}
 
 function reheapifyNodesDown(arr, length, counter) {
   let index = 0;
@@ -141,7 +166,7 @@ function reheapifyNodesDown(arr, length, counter) {
       let temp = arr[index].value;
       arr[index].value = arr[bigChildIndex].value;
       arr[bigChildIndex].value = temp;
-      console.log('counter in reheapify', counter)
+      // console.log('counter in reheapify', counter)
       nodeTransition(false, arr, index, bigChildIndex, counter);
       counter +=2
       index = bigChildIndex;
@@ -154,121 +179,90 @@ function reheapifyNodesDown(arr, length, counter) {
   return counter;
 }
 
-// function nodeSwap(arr, a, b, it) {
-  // let temp = arr[a].value;
-  // arr[a].value = arr[b].value;
-  // arr[b].value = temp;
-  // nodeTransition(arr, a, b, it);
-// }
-
 function nodeTransition(isLastNode, arr, a, b, it) {
   let circA = svgContainer.selectAll("circle").filter(function(d, i) { return i == a });
   let circB = svgContainer.selectAll("circle").filter(function(d, i) { return i == b });
 
   let textA = svgContainer.selectAll("text").filter(function(d, i) { return i == a });
   let textB = svgContainer.selectAll("text").filter(function(d, i) { return i == b });
-  console.log('circA', a, circA.data()[0], 'circB', b, circB.data()[0])
-  // console.log()
 
-  console.log('delay of transition', it);
   let tempA = Object.assign({"cx": circA.data()[0].cx, "cy": circA.data()[0].cy, "value": circA.data()[0].value});
   let tempB = Object.assign({"cx": circB.data()[0].cx, "cy": circB.data()[0].cy, "value": circB.data()[0].value});
 
+  // circA.on(stat)
+
   circA.transition()
-    .attr("fill", "lightblue")
-    .transition()
     .duration(1000)
     .delay(it * 1000)
-    .attr("value", function(d) { return tempB.value})
+    .attr("fill", "lightblue")
+    .transition()
+    // .attr("value", function(d) { return tempB.value})
     .attr("cx", function(d) { return tempB.cx })
     .attr("cy", function(d) {return tempB.cy })
     .transition()
-    .duration(10)
+    // .duration(10)
     .attr("fill", "blue")
+    // .transition()
+    // .remove();
+    // .on("end", function(d) { this.remove() })
+    // .remove()
 
+  textA.transition()
+    .duration(1000)
+    .delay(it * 1000)
+    .attr("fill", "black")
+    .transition()
+    .attr("x", tempB.cx - 10)
+    .attr("y", tempB.cy + 5)
+    .transition()
+    // .duration(10)
+    .attr("fill", "white")
+    // .transition()
+    // .remove();
+    // .on("end", function(d) {this.remove()})
 
-  // textA.transition()
-  //   .attr("fill", "black")
-  //   .transition()
-  //   .duration(1000)
-  //   .delay(it * 1000)
-  //   .attr("x", tempB.cx - 10)
-  //   .attr("y", tempB.cy + 5)
-  //   .transition()
-  //   .duration(10)
-  //   .attr("fill", "white")
-
-  // if (isLastNode) {
-  //   console.log('is last node')
-  //   circB.transition()
-  //     .attr("fill", "lightblue")
-  //     .transition()
-  //     .duration(1000)
-  //     .delay(function(d, i) { return it * 1000})
-  //     .attr("value", function(d) { return tempA.value})
-  //     .attr("cx", function(d) { return tempA.cx })
-  //     .attr("cy", function(d) {return tempA.cy })
-  //     .transition()
-  //     .duration(10)
-  //     .attr("fill", "blue")
-
-      // circB.transition()
-      //   .attr("fill", "lightblue")
-      //   .transition()
-      //   .duration(1500)
-      //   .delay(function(d, i) { return it * 1000})
-      //   .attr("value", function(d) { return tempA.value})
-      //   .attr("cx", function(d) { return tempA.cx })
-      //   .attr("cy", function(d) {return tempA.cy })
-      //   .transition()
-      //   .attr("fill", "blue")
-
-    // textB.transition()
-    //   .attr("fill", "black")
-    //   .transition()
-    //   .duration(1000)
-    //   .delay(function(d,i) { return it * 1000})
-    //   .text(function(d) { return tempA.value })
-    //   .attr("x", tempA.cx - 10)
-    //   .attr("y", tempA.cy + 5)
-    //   .transition()
-    //   .duration(10)
-    //   .attr("fill", "white")
-      // .transition()
-      // .remove();
-
-    // let arrData = svgContainer.selectAll("circle").data();
-
-    // arrData = arrData.slice(0, arrData.length - 1);
-    // svgContainer.selectAll("circle").data(arrData).exit().remove();
-  // }
-
-  // else {
-    console.log('isnt last node');
     circB.transition()
-      .attr("fill", "lightblue")
-      .transition()
       .duration(1000)
       .delay(it * 1000)
-      .attr("value", function(d) { return tempA.value})
+      .attr("fill", "lightblue")
+      .transition()
+      // .attr("value", function(d) { return tempA.value})
       .attr("cx", function(d) { return tempA.cx })
       .attr("cy", function(d) {return tempA.cy })
       .transition()
       .attr("fill", "blue")
+      .transition()
+      .remove();
 
-    // textB.transition()
-    // .attr("fill", "black")
-    // .transition()
-    // .duration(1000)
-    // .delay(it * 1000)
-    // .text(function(d) { return tempA.value })
-    // .attr("x", tempA.cx - 10)
-    // .attr("y", tempA.cy + 5)
-    // .transition()
-    // .attr("fill", "white")
+    textB.transition()
+    .duration(1000)
+    .delay(it * 1000)
+    .attr("fill", "black")
+    .transition()
+    .text(function(d) { return tempA.value })
+    .attr("x", tempA.cx - 10)
+    .attr("y", tempA.cy + 5)
+    .transition()
+    .attr("fill", "white")
+    .transition()
+    .remove();
   // }
   it +=2;
   return it;
-  // svgContainer.selectAll("circle").data(arr);
-  // console.log(svgContainer.selectAll("circle").data())
 }
+
+function nodeHeapSort(arr) {
+  let counter = 0;
+  let unsortedArrLength = arr.length;
+
+  while (unsortedArrLength > arr.length - 2) {
+    --unsortedArrLength;
+    let temp = arr[0].value;
+    arr[0].value = arr[unsortedArrLength].value;
+    arr[unsortedArrLength].value = temp;
+
+    nodeTransition(true, arr, 0, unsortedArrLength, counter);
+    counter +=2;
+    console.log('all circles', svgContainer.selectAll("circle").data());
+  }
+};
