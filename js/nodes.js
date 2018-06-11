@@ -7,7 +7,6 @@ function removeHighlight() {
 
 function addHighlight(data, index) {
   removeHighlight();
-  // d3.select(this).attr("fill", "lightblue");
   var selectedCircle = d3.selectAll("circle").select(function(d, i) {return i == index ? this : null})
   var selectedElement = d3.selectAll("rect").select(function(d, i) { return i == index ? this : null })
   var selectedCircleText = d3.selectAll("text.circle").select(function(d, i) { return i == index ? this : null })
