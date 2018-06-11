@@ -1,12 +1,22 @@
 body {
   background-color:white;
   text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
   /* float: left; */
+
+}
+
+input {
+  font-size: 1.1em;
+}
+
+label  {
+  font-size: 1.1em;
 }
 
 button {
   margin-top: 20px;
-  line-height: 60px;
+  line-height: 40px;
   font-weight: bold;
   padding: 0 40px;
   background: salmon;
@@ -14,6 +24,21 @@ button {
 }
 button:hover {
   background: lightsalmon;
+}
+
+rect:hover {
+  cursor: pointer;
+}
+
+circle:hover {
+  cursor: pointer;
+}
+
+text.circle:hover {
+  cursor: pointer;
+}
+text.value:hover {
+  cursor: pointer;
 }
 
 .svg-container {

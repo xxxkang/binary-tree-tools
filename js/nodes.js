@@ -1,9 +1,15 @@
 function removeHighlight() {
-  d3.selectAll("circle").attr("fill", "blue")
-  d3.selectAll("rect").attr("fill", "blue")
-  d3.selectAll("text.circle").attr("fill", "white")
-  d3.selectAll("text.value").attr("fill", "white")
+  d3.selectAll("circle").attr("fill", regFill)
+  d3.selectAll("rect").attr("fill", regFill)
+  d3.selectAll("text.circle").attr("fill", regFillText)
+  d3.selectAll("text.value").attr("fill", regFillText);
 }
+
+var regFill = "lightblue";
+var highlightFill = "blue";
+
+var regFillText = "black"
+var highlightFillText = "white"
 
 function addHighlight(data, index) {
   removeHighlight();
@@ -12,19 +18,18 @@ function addHighlight(data, index) {
   var selectedCircleText = d3.selectAll("text.circle").select(function(d, i) { return i == index ? this : null })
   var selectedElementText = d3.selectAll("text.value").select(function(d, i) { return i == index ? this : null })
 
-  selectedCircle.attr("fill", "lightblue");
-  selectedElement.attr("fill", "lightblue");
-  selectedCircleText.attr("fill", "black");
-  selectedElementText.attr("fill", "black");
+  selectedCircle.attr("fill", highlightFill);
+  selectedElement.attr("fill", highlightFill);
+  selectedCircleText.attr("fill", highlightFillText);
+  selectedElementText.attr("fill", highlightFillText);
 }
 
 function createNodes(arr, cx, cy, radius) {
   let xSpacing = 300;
   let ySpacing = 100;
   let nodeData = [];
-  svgContainer.append("h3")
-              .text("Heap Binary Tree")
-  nodeData.push({ "cx": cx, "cy": cy, "radius": radius, "color": "blue", "value": arr[0]})
+
+  nodeData.push({ "cx": cx, "cy": cy, "radius": radius, "color": regFill, "value": arr[0]})
   let i = 1;
 
   while (i < arr.length) {
@@ -36,7 +41,7 @@ function createNodes(arr, cx, cy, radius) {
           "cx": nodeData[parent(i)].cx - xSpacing * ((.8/row) * .85 ),
           "cy": nodeData[parent(i)].cy + ySpacing,
           "radius": radius,
-          "color": "blue",
+          "color": regFill,
           "value": arr[i]
         }
 
@@ -52,7 +57,7 @@ function createNodes(arr, cx, cy, radius) {
           "cx": nodeData[parent(i)].cx + xSpacing * ((.8/row) * .85 ),
           "cy": nodeData[parent(i)].cy + ySpacing,
           "radius": radius,
-          "color": "blue",
+          "color": regFill,
           "value": arr[i]
         }
         svgContainer.append("line")
@@ -83,13 +88,14 @@ function createNodes(arr, cx, cy, radius) {
                             .data(nodeData)
                             .enter()
                             .append("text")
-                            .attr("class", "circle");
+                            .attr("class", "circle")
+                            .on("click", addHighlight);
 
   var values = texts
                 .attr("x", function(d) { return d.cx} )
                 .attr("y", function(d) { return d.cy })
                 .text(function (d) { return d.value })
-                .attr("fill", "white")
+                .attr("fill", regFillText)
                 .attr("font-family", "sans-serif")
                 .attr("font-size", "15px");
 
@@ -101,26 +107,23 @@ function createNodes(arr, cx, cy, radius) {
                         .attr("x", function(d) { return d.cx - 10 })
                         .attr("y", function(d) { return d.cy + 5 })
 
-
-  document.getElementById('sort').addEventListener("click", function() {
-    nodeHeapSort(nodeData);
-  })
-
-
-
   return nodeData;
 }
 
 function createArray(arr, x, y, width, height) {
 
-  var arrayData = arr.map(value => {
-    return { x: x += 50, y: y, width: width, height: height, color: 'blue', value: value}
+  var arrayData = arr.map((value, i) => {
+    if (i !== 0) {
+      x += 50;
+    }
+    return { x: x, y: y, width: width, height: height, color: regFill, value: value}
   })
 
   var elementsArr = arrayContainer.selectAll("rect")
                                   .data(arrayData)
                                   .enter()
-                                  .append("rect");
+                                  .append("rect")
+                                  .on("click", addHighlight);
 
   var elementAttributes = elementsArr
                           .attr("x", function(r) { return r.x })
@@ -135,10 +138,10 @@ function createArray(arr, x, y, width, height) {
                           .enter()
                           .append("text")
                           .attr("class", "value")
-                          .attr("x", function(d) { return d.x + 15} )
+                          .attr("x", function(d) { return d.x + d.width/ 3} )
                           .attr("y", function(d) { return d.y + 30 })
                           .text(function (d) { return d.value })
-                          .attr("fill", "white")
+                          .attr("fill", regFillText)
                           .attr("font-family", "sans-serif")
                           .attr("font-size", "15px");
 
@@ -147,10 +150,10 @@ function createArray(arr, x, y, width, height) {
                               .enter()
                               .append("text")
                               .attr("class", "index")
-                              .text(function(d, i) { return i})
+                              .text(function(d, i) { return `[ ${i} ]` })
                               .attr("x", function(d) { return d.x + 15 })
                               .attr("y", function(d) { return d.y - 15 })
-                              .attr("fill", "black")
+                              .attr("fill", regFillText)
                               .attr("font-family", "sans-serif")
                               .attr("font-size", "15px")
 
