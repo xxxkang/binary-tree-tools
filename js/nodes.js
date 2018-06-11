@@ -39,6 +39,13 @@ function createNodes(arr, cx, cy, radius) {
           "color": "blue",
           "value": arr[i]
         }
+
+        svgContainer.append("line")
+          .style("stroke", "black")
+          .attr("x1", nodeData[parent(i)].cx)
+          .attr("y1", nodeData[parent(i)].cy)
+          .attr("x2", node.cx)
+          .attr("y2", node.cy)
     }
     else if (i == rightChild(parent(i))) {
         node = {
@@ -48,8 +55,15 @@ function createNodes(arr, cx, cy, radius) {
           "color": "blue",
           "value": arr[i]
         }
+        svgContainer.append("line")
+        .style("stroke", "black")
+        .attr("x1", nodeData[parent(i)].cx)
+        .attr("y1", nodeData[parent(i)].cy)
+        .attr("x2", node.cx)
+        .attr("y2", node.cy)
     }
     nodeData.push(node);
+
     ++i;
   }
 
@@ -92,13 +106,15 @@ function createNodes(arr, cx, cy, radius) {
     nodeHeapSort(nodeData);
   })
 
+
+
   return nodeData;
 }
 
 function createArray(arr, x, y, width, height) {
 
   var arrayData = arr.map(value => {
-    return { x: x += 60, y: y, width: width, height: height, color: 'blue', value: value}
+    return { x: x += 50, y: y, width: width, height: height, color: 'blue', value: value}
   })
 
   var elementsArr = arrayContainer.selectAll("rect")
@@ -111,7 +127,8 @@ function createArray(arr, x, y, width, height) {
                           .attr("y", function(r) { return r.y })
                           .attr("width", function(r) { return r.width })
                           .attr("height", function(r) { return r.height })
-                          .attr("fill", function(r) { return r.color });
+                          .attr("fill", function(r) { return r.color })
+                          .attr("stroke", "white")
 
   var arrTextValues = arrayContainer.selectAll("text.value")
                           .data(arrayData)
@@ -136,9 +153,6 @@ function createArray(arr, x, y, width, height) {
                               .attr("fill", "black")
                               .attr("font-family", "sans-serif")
                               .attr("font-size", "15px")
-
-  removeHighlight();
-
 
   return arrayData;
 }
