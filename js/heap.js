@@ -17,6 +17,7 @@ function rightChild(index) {
   return 2 * index + 2;
 }
 
+//make an array a heap
 function makeHeap(arr) {
   let i;  // Index of next element to be added to heap
   let k;  // Index of new element as it is being pushed

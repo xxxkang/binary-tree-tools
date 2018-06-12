@@ -1,11 +1,11 @@
+let depth;
+
 function calculateDimensions(arr) {
   let ySpacing = 100;
 
   depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1;
   return { width: Math.pow(2, depth), height: ySpacing += ySpacing * depth }
 }
-
-let depth;
 
 function createContainer(id, arr, width, height) {
   let box = calculateDimensions(arr);
@@ -16,7 +16,7 @@ function createContainer(id, arr, width, height) {
                 .append("svg")
                 .attr("width", width || box.width * 600 * (.8/depth) * .75)
                 .attr("height", height || box.height)
-  console.log(id, container.attr("width"))
+
   return container;
 }
 
