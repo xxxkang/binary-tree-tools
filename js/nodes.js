@@ -1,15 +1,15 @@
+var regFill = "lightblue";
+var highlightFill = "blue";
+
+var regFillText = "black"
+var highlightFillText = "white"
+
 function removeHighlight() {
   d3.selectAll("circle").attr("fill", regFill)
   d3.selectAll("rect").attr("fill", regFill)
   d3.selectAll("text.circle").attr("fill", regFillText)
   d3.selectAll("text.value").attr("fill", regFillText);
 }
-
-var regFill = "lightblue";
-var highlightFill = "blue";
-
-var regFillText = "black"
-var highlightFillText = "white"
 
 function addHighlight(data, index) {
   removeHighlight();
@@ -159,127 +159,3 @@ function createArray(arr, x, y, width, height) {
 
   return arrayData;
 }
-
-function reheapifyNodesDown(arr, length, counter) {
-  let index = 0;
-  let bigChildIndex;
-  let isHeap = false;
-  //the loop keeps going while the array is not a heap, and while the current element
-  //has at least a left child. The test to see whether the current element has a left
-  //child is leftChild(index) < length
-  while (!isHeap && leftChild(index) < length) {
-    if (rightChild(index) >= length) {   //no right child
-      bigChildIndex = leftChild(index);
-    }
-    else if (arr[leftChild(index)].value > arr[rightChild(index)].value) { //if left child is the bigger of the two children
-      bigChildIndex = leftChild(index);
-    }
-    else {  //then right child is bigger
-      bigChildIndex = rightChild(index)
-    }
-    //Check if the larger child is bigger than the current node. If so,
-    //then swap the current node with its bigger child and continue; otherwise it's a heap
-    if (arr[index].value < arr[bigChildIndex].value) {
-      let temp = arr[index].value;
-      arr[index].value = arr[bigChildIndex].value;
-      arr[bigChildIndex].value = temp;
-      // console.log('counter in reheapify', counter)
-      nodeTransition(false, arr, index, bigChildIndex, counter);
-      counter +=2
-      index = bigChildIndex;
-    }
-    else {
-      isHeap = true;
-    }
-  }
-  console.log('in reheapified', arr);
-  return counter;
-}
-
-function nodeTransition(isLastNode, arr, a, b, it) {
-  let circA = svgContainer.selectAll("circle").filter(function(d, i) { return i == a });
-  let circB = svgContainer.selectAll("circle").filter(function(d, i) { return i == b });
-
-  let textA = svgContainer.selectAll("text").filter(function(d, i) { return i == a });
-  let textB = svgContainer.selectAll("text").filter(function(d, i) { return i == b });
-
-  let tempA = Object.assign({"cx": circA.data()[0].cx, "cy": circA.data()[0].cy, "value": circA.data()[0].value});
-  let tempB = Object.assign({"cx": circB.data()[0].cx, "cy": circB.data()[0].cy, "value": circB.data()[0].value});
-
-  // circA.on(stat)
-
-  circA.transition()
-    .duration(1000)
-    .delay(it * 1000)
-    .attr("fill", "lightblue")
-    .transition()
-    // .attr("value", function(d) { return tempB.value})
-    .attr("cx", function(d) { return tempB.cx })
-    .attr("cy", function(d) {return tempB.cy })
-    .transition()
-    // .duration(10)
-    .attr("fill", "blue")
-    // .transition()
-    // .remove();
-    // .on("end", function(d) { this.remove() })
-    // .remove()
-
-  textA.transition()
-    .duration(1000)
-    .delay(it * 1000)
-    .attr("fill", "black")
-    .transition()
-    .attr("x", tempB.cx - 10)
-    .attr("y", tempB.cy + 5)
-    .transition()
-    // .duration(10)
-    .attr("fill", "white")
-    // .transition()
-    // .remove();
-    // .on("end", function(d) {this.remove()})
-
-    circB.transition()
-      .duration(1000)
-      .delay(it * 1000)
-      .attr("fill", "lightblue")
-      .transition()
-      // .attr("value", function(d) { return tempA.value})
-      .attr("cx", function(d) { return tempA.cx })
-      .attr("cy", function(d) {return tempA.cy })
-      .transition()
-      .attr("fill", "blue")
-      .transition()
-      .remove();
-
-    textB.transition()
-    .duration(1000)
-    .delay(it * 1000)
-    .attr("fill", "black")
-    .transition()
-    .text(function(d) { return tempA.value })
-    .attr("x", tempA.cx - 10)
-    .attr("y", tempA.cy + 5)
-    .transition()
-    .attr("fill", "white")
-    .transition()
-    .remove();
-  // }
-  it +=2;
-  return it;
-}
-
-function nodeHeapSort(arr) {
-  let counter = 0;
-  let unsortedArrLength = arr.length;
-
-  while (unsortedArrLength > arr.length - 2) {
-    --unsortedArrLength;
-    let temp = arr[0].value;
-    arr[0].value = arr[unsortedArrLength].value;
-    arr[unsortedArrLength].value = temp;
-
-    nodeTransition(true, arr, 0, unsortedArrLength, counter);
-    counter +=2;
-    console.log('all circles', svgContainer.selectAll("circle").data());
-  }
-};

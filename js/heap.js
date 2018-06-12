@@ -1,3 +1,38 @@
+//Helper functions
+function swap(arr, a, b) {
+  let temp = arr[a];
+  arr[a] = arr[b];
+  arr[b] = temp;
+}
+
+function parent(index) {
+  return Math.floor((index - 1) / 2);
+}
+
+function leftChild(index) {
+  return 2 * index + 1;
+}
+
+function rightChild(index) {
+  return 2 * index + 2;
+}
+
+function makeHeap(arr) {
+  let i;  // Index of next element to be added to heap
+  let k;  // Index of new element as it is being pushed
+
+  for (i = 1; i < arr.length; ++i)
+  {
+      k = i;
+      while (k > 0 && arr[k] > arr[parent(k)])
+      {
+          swap(arr, parent(k), k);
+          k = parent(k);
+      }
+  }
+  return arr;
+}
+
 function reheapifyDown(arr, length) {
   let index = 0;
   let bigChildIndex;
@@ -27,42 +62,6 @@ function reheapifyDown(arr, length) {
       isHeap = true;
     }
   }
-}
-
-//Helper functions
-function swap(arr, a, b) {
-  let temp = arr[a];
-  arr[a] = arr[b];
-  arr[b] = temp;
-}
-
-function parent(index) {
-  return Math.floor((index - 1) / 2);
-}
-
-
-function leftChild(index) {
-  return 2 * index + 1;
-}
-
-function rightChild(index) {
-  return 2 * index + 2;
-}
-
-function makeHeap(arr) {
-  let i;  // Index of next element to be added to heap
-  let k;  // Index of new element as it is being pushed
-
-  for (i = 1; i < arr.length; ++i)
-  {
-      k = i;
-      while (k > 0 && arr[k] > arr[parent(k)])
-      {
-          swap(arr, parent(k), k);
-          k = parent(k);
-      }
-  }
-  return arr;
 }
 
 function heapSort(arr) {
