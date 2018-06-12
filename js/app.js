@@ -2,7 +2,6 @@ function calculateDimensions(arr) {
   let ySpacing = 100;
 
   depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1;
-  // console.log(Math.ceil(depth )
   return { width: Math.pow(2, depth), height: ySpacing += ySpacing * depth }
 }
 
@@ -46,7 +45,3 @@ let start = svgContainer.attr("width") / 2;
 
 var nodes = createNodes(testArr, start, 50, 35);
 var elements = createArray(testArr, 0, 30, 50, 50);
-
-console.log('nodeData in main after creation', nodes)
-
-
