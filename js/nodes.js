@@ -139,6 +139,7 @@ function createArray(arr, x, y, width, height) {
                         .enter()
                         .append("text")
                         .attr("class", "rect")
+                        .on("click", addHighlight)
                         .attr("x", function(d) { return d.x + d.width/ 3} )
                         .attr("y", function(d) { return d.y + 30 })
                         .text(function (d) { return d.value })
