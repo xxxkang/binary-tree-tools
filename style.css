@@ -14,7 +14,7 @@ label  {
   font-size: 1.1em;
 }
 
-button {
+/* button {
   margin-top: 20px;
   line-height: 40px;
   font-weight: bold;
@@ -24,6 +24,12 @@ button {
 }
 button:hover {
   background: lightsalmon;
+} */
+
+button {
+  margin-top: 1em;
+  /* font-weight: bold; */
+  font-size: 1em;
 }
 
 rect:hover {
@@ -37,8 +43,13 @@ circle:hover {
 text.circle:hover {
   cursor: pointer;
 }
-text.value:hover {
+text.rect:hover {
   cursor: pointer;
+}
+
+.subtext {
+  font-size: .8em;
+  font-weight: 400;
 }
 
 .svg-container {

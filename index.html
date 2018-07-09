@@ -8,13 +8,16 @@
       <form id="array">
         <label>Enter an array:</label>
         <input type="text" name="array" />
-        <input type="submit" />
+        <input type="submit" value="Submit"/>
       </form>
     </div>
-    <h3>Binary Tree Visualization <br /> Array In Heap</h3>
-    <p>Click a value on the tree or array to see its <br /> corresponding index in the visualizations.</p>
+    <button onclick="heapify()">Heapify!</button>
+    <h3>Binary Tree Visualization
+      <!-- <br /> Array In Heap -->
+    </h3>
+    <p>Click a value in the binary tree or array to highlight its location in both visualizations.</p>
     <div id="binary-tree"></div>
-    <h3>Array in Heap</h3>
+    <h3 id="array-descrip">Array</h3>
     <div id="array-visual"></div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
