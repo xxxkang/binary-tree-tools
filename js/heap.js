@@ -17,9 +17,9 @@ function rightChild(index) {
   return 2 * index + 2;
 }
 
-//make an array a heap
+//make an array into a max-heap
 function makeHeap(arr) {
-  let i;  // Index of next element to be added to heap
+  let i;  // Index of next element to be added to the heap
   let k;  // Index of new element as it is being pushed
 
   for (i = 1; i < arr.length; ++i)
@@ -39,11 +39,9 @@ function reheapifyDown(arr, length) {
   let bigChildIndex;
   let isHeap = false;
 
-  //the loop keeps going while the array is not a heap, and while the current element
-  //has at least a left child. The test to see whether the current element has a left
-  //child is leftChild(index) < length
+  //loop keeps going while the array is not a heap and the current element
+  //has at least a left child. If leftChild(index) is greater than the length of the array, the index does not have any children
   while (!isHeap && leftChild(index) < length) {
-    // console.log(arr);
     if (rightChild(index) >= length) {   //no right child
       bigChildIndex = leftChild(index);
     }
@@ -53,8 +51,7 @@ function reheapifyDown(arr, length) {
     else {  //then right child is bigger
       bigChildIndex = rightChild(index)
     }
-    //Check if the larger child is bigger than the current node. If so,
-    //then swap the current node with its bigger child and continue; otherwise it's a heap
+    //If the larger child's value is bigger than the current(parent) node, swap the values and continue the loop; otherwise it's a heap
     if (arr[index] < arr[bigChildIndex]) {
       swap(arr, index, bigChildIndex)
       index = bigChildIndex;
