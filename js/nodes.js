@@ -49,35 +49,39 @@ function createNodes(arr, cx, cy, radius) {
   let xSpacing = 300;
   let ySpacing = 100;
 
-  //initialize array of circle nodes with root node
-  let nodeData = [{ "cx": cx, "cy": cy, "radius": radius, "color": regFill, "value": arr[0]}];
+  let nodeData = [];
 
-  let i = 1;
+  let i = 0;
   while (i < arr.length) {
 
     let row = Math.ceil(Math.log2(i + 2)) - 1;
 
-    if (i == leftChild(parent(i))) {
-        node = {
-          "cx": nodeData[parent(i)].cx - xSpacing * ((.8/row) * .85 ),
-          "cy": nodeData[parent(i)].cy + ySpacing,
-          "radius": radius,
-          "color": regFill,
-          "value": arr[i]
-        }
-        svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+    if (i === 0) {
+      nodeData.push({ "cx": cx, "cy": cy, "radius": radius, "color": regFill, "value": arr[i]})
     }
-    else if (i == rightChild(parent(i))) {
-        node = {
-          "cx": nodeData[parent(i)].cx + xSpacing * ((.8/row) * .85 ),
-          "cy": nodeData[parent(i)].cy + ySpacing,
-          "radius": radius,
-          "color": regFill,
-          "value": arr[i]
-        }
-        svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+    else {
+      if (i == leftChild(parent(i))) {
+          node = {
+            "cx": nodeData[parent(i)].cx - xSpacing * ((.8/row) * .85 ),
+            "cy": nodeData[parent(i)].cy + ySpacing,
+            "radius": radius,
+            "color": regFill,
+            "value": arr[i]
+          }
+          svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+      }
+      else if (i == rightChild(parent(i))) {
+          node = {
+            "cx": nodeData[parent(i)].cx + xSpacing * ((.8/row) * .85 ),
+            "cy": nodeData[parent(i)].cy + ySpacing,
+            "radius": radius,
+            "color": regFill,
+            "value": arr[i]
+          }
+          svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+      }
+      nodeData.push(node);
     }
-    nodeData.push(node);
     ++i;
   }
 
