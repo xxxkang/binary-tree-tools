@@ -8,7 +8,7 @@ function calculateDimensions(arr) {
   let ySpacing = 100;
 
   depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1;
-  return { width: Math.pow(2, depth), height: ySpacing += ySpacing * depth }
+  return { width: Math.pow(2, depth), height: ySpacing += ySpacing * depth}
 }
 
 function createContainer(id, arr, width, height) {
@@ -33,7 +33,7 @@ function createVisuals(arr) {
   svgContainer = createContainer("binary-tree", arr);
   arrayContainer = createContainer("array-visual", arr, arr.length * 55, 300);
   start = svgContainer.attr("width") / 2;
-  createNodes(arr, start, 50, 35);
+  createNodes(arr, start);
   createArray(arr, 0, 30, 50, 50);
 }
 
