@@ -38,6 +38,79 @@ function addHighlight(data, index) {
   d3.selectAll("text.rect").select(indexMatch).attr("fill", highlightFillText);
 }
 
+function Tree() {
+  this.nodes = [];
+
+  this.createBinaryTree = function(arr, xSpacing, ySpacing, radius) {
+    let nodeData = [];
+    let i = 0;
+    let node = {};
+
+
+    while (i < arr.length) {
+      let depth = Math.ceil(Math.log2(i + 2)) - 1;
+      if (i == 0) {
+        node = new Node(arr[i], i, depth, xSpacing, ySpacing, radius)
+      }
+      else if (i == leftChild(parent(i))) {
+        // node = {
+        //   "cx": nodes[parent(i)].cx - xSpacing * ((.8/row) * .85 ),
+        //   "cy": nodes[parent(i)].cy + ySpacing,
+        //   "radius": radius,
+        //   "color": regFill,
+        //   "value": arr[i],
+        // }
+        node = new Node(arr[i],
+                        i,
+                        depth,
+                        nodeData[parent(i)].cx - xSpacing,
+                        nodeData[parent(i)].cy + ySpacing,
+                        radius)
+        svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+      }
+      else if (i == rightChild(parent(i))) {
+        // node = {
+        //   "cx": nodeData[parent(i)].cx + xSpacing * ((.8/row) * .85 ),
+        //   "cy": nodeData[parent(i)].cy + ySpacing,
+        //   "radius": radius,
+        //   "color": regFill,
+        //   "value": arr[i]
+        // }
+        node = new Node(arr[i],
+          i,
+          depth,
+          nodeData[parent(i)].cx + xSpacing,
+          nodeData[parent(i)].cy + ySpacing,
+          radius)
+        svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+      }
+      // console.log(i);
+      nodeData.push(node)
+      ++i;
+    }
+    this.nodes = nodeData;
+    // console.log('nodes in tree', nodeData)
+  }
+
+  // this.size = function() {
+  //     return d3.selectAll("circle").nodes().length;
+  // }
+
+}
+
+function Node(value, index, depth, cx, cy, radius) {
+  this.value = value;
+  this.index = index;
+  this.depth = depth;
+  this.cx = cx;
+  this.cy = cy;
+  this.radius = radius;
+  this.fill = regFill;
+  this.highlighted = false;
+
+  //calculate left and right
+}
+
 function removeHighlight() {
   d3.selectAll("circle").attr("fill", regFill)
   d3.selectAll("rect").attr("fill", regFill)
@@ -45,44 +118,48 @@ function removeHighlight() {
   d3.selectAll("text.rect").attr("fill", regFillText);
 }
 
-function createNodes(arr, cx, cy, radius) {
-  let xSpacing = 300;
-  let ySpacing = 100;
+function createNodes(arr) {
+  // let xSpacing = 300;
+  // let ySpacing = 100;
 
   //initialize array of circle nodes with root node
-  let nodeData = [{ "cx": cx, "cy": cy, "radius": radius, "color": regFill, "value": arr[0]}];
+  let nodeData = new Tree();
+  nodeData.createBinaryTree(arr, 300, 100, 50)
+  console.log(nodeData.nodes)
+  // nodeData.push(new Node(arr[0], 0, 1, xSpacing, ySpacing))
 
-  let i = 1;
-  while (i < arr.length) {
+  // let i = 1;
+  // while (i < arr.length) {
 
-    let row = Math.ceil(Math.log2(i + 2)) - 1;
+  //   let row = Math.ceil(Math.log2(i + 2)) - 1;
 
-    if (i == leftChild(parent(i))) {
-        node = {
-          "cx": nodeData[parent(i)].cx - xSpacing * ((.8/row) * .85 ),
-          "cy": nodeData[parent(i)].cy + ySpacing,
-          "radius": radius,
-          "color": regFill,
-          "value": arr[i]
-        }
-        svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
-    }
-    else if (i == rightChild(parent(i))) {
-        node = {
-          "cx": nodeData[parent(i)].cx + xSpacing * ((.8/row) * .85 ),
-          "cy": nodeData[parent(i)].cy + ySpacing,
-          "radius": radius,
-          "color": regFill,
-          "value": arr[i]
-        }
-        svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
-    }
-    nodeData.push(node);
-    ++i;
-  }
+  //   if (i == leftChild(parent(i))) {
+  //       node = {
+  //         "cx": nodeData[parent(i)].cx - xSpacing * ((.8/row) * .85 ),
+  //         "cy": nodeData[parent(i)].cy + ySpacing,
+  //         "radius": radius,
+  //         "color": regFill,
+  //         "value": arr[i],
+
+  //       }
+  //       svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+  //   }
+  //   else if (i == rightChild(parent(i))) {
+  //       node = {
+  //         "cx": nodeData[parent(i)].cx + xSpacing * ((.8/row) * .85 ),
+  //         "cy": nodeData[parent(i)].cy + ySpacing,
+  //         "radius": radius,
+  //         "color": regFill,
+  //         "value": arr[i]
+  //       }
+  //       svgContainer.append("line").call(createLineAttr, "black", nodeData[parent(i)].cx, nodeData[parent(i)].cy, node.cx, node.cy);
+  //   }
+  //   nodeData.push(node);
+  //   ++i;
+  // }
 
   var nodes = svgContainer.selectAll("circle")
-                            .data(nodeData)
+                            .data(nodeData.nodes)
                             .enter()
                             .append("circle")
                             .on("click", addHighlight);
@@ -90,7 +167,7 @@ function createNodes(arr, cx, cy, radius) {
   nodes.call(circleAttr);
 
   var texts = svgContainer.selectAll("text.circle")
-                            .data(nodeData)
+                            .data(nodeData.nodes)
                             .enter()
                             .append("text")
                             .attr("class", "circle")
@@ -111,7 +188,7 @@ function createNodes(arr, cx, cy, radius) {
       .attr("x", function(d) { return d.cx - 10 })
       .attr("y", function(d) { return d.cy + 5 })
 
-  return nodeData;
+  // return nodeData;
 }
 
 function createArray(arr, x, y, width, height) {
