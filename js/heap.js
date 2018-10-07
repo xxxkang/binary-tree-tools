@@ -1,3 +1,4 @@
+let swaps = [];
 //Helper functions
 function swap(arr, a, b) {
   let temp = arr[a];
@@ -54,6 +55,7 @@ function reheapifyDown(arr, length) {
     //If the larger child's value is bigger than the current(parent) node, swap the values and continue the loop; otherwise it's a heap
     if (arr[index] < arr[bigChildIndex]) {
       swap(arr, index, bigChildIndex)
+      swaps.push([index,bigChildIndex]);
       index = bigChildIndex;
     }
     else {
@@ -64,12 +66,37 @@ function reheapifyDown(arr, length) {
 
 function heapSort(arr) {
   let unsortedArrLength = arr.length;
+  console.log(arr)
 
-  while (unsortedArrLength > 1) {
+  while (unsortedArrLength) {
     --unsortedArrLength;
     swap(arr, 0, unsortedArrLength);
+    swaps.push([0, unsortedArrLength])
     reheapifyDown(arr, unsortedArrLength);
   }
+
+  console.log(swaps)
+
+  var promises = swaps.map((e,i) => {
+    if(e[2]) {
+      return new Promise((res,rej) => {
+        setTimeout(function() {
+          res(heapTree.swapNodes(e[0], e[1], e[2]))
+          console.log(`${i}th try`)
+        }, i * 2000)
+    })
+    }
+    else {
+    return new Promise((res,rej) => {
+        setTimeout(function() {
+          res(heapTree.swapNodes(e[0],e[1]))
+          console.log(`${i}th try`)
+        }, i * 2000)
+      })
+    }
+  })
+
+  Promise.all(promises).then(() => console.log('finished'))
   return arr;
 }
 

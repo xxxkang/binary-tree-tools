@@ -55,6 +55,10 @@ function heapify() {
   document.getElementById('array-descrip').innerHTML = "Array In Max-Heap <p class='subtext'> Rule: The parent's value is always greater than or equal to the values of its children.</p>";
 }
 
+function startHeapSort() {
+  heapSort(input);
+}
+
 //default values
 input = [3,4,2,9,8,7,12];
 createVisuals(input);

@@ -4,16 +4,143 @@ var highlightFill = "blue";
 var regFillText = "black"
 var highlightFillText = "white"
 
+let heapTree = {};
+
 function Tree() {
   this.nodes = [];
   this.data = [];
+  this.text = [];
 
   this.addNode = function(node) {
     this.data.push(node);
-    svgContainer.selectAll("circle")
+    this.text = svgContainer.selectAll("text.circle")
+    .data(this.data)
+    .enter()
+    .append("text")
+    .attr("class", "circle")
+    .attr("x", function(d) { return d.cx - (d.radius * .1)} )
+    .attr("y", function(d) { return d.cy + 5 })
+    .text(function (d) { return d.value })
+    .call(textAttr, regFillText, "sans-serif", "15px")
+    .on("click", addHighlight)
+
+    // this.text = svgContainer.selectAll("text.circle")
+    //             .data(this.data)
+    //             .enter()
+    //             .append("text")
+    //             .attr("class", "circle")
+
+    this.nodes = svgContainer.selectAll("circle")
+                .data(this.data)
+                .enter()
+                .append("circle")
+  }
+
+  this.updateNodes = function() {
+    this.nodes = svgContainer.selectAll("circle")
     .data(this.data)
     .enter()
     .append("circle")
+  }
+
+  this.swapNodeData = function(a, b) {
+    let temp = this.data[a];
+    this.data[a] = this.data[b];
+    this.data[b] = temp;
+  }
+
+  this.findNode = function(index) {
+    return this.nodes.filter((d) => d.index === index)
+  }
+
+  this.findText = function(index) {
+    return this.text.filter((d) => d.index === index)
+    // console.log(this.text.data())
+    // console.log(index)
+    // return this.text.filter((d) => console.log('data index', index, d.index))
+  }
+
+
+  this.removeNode = function(index) {
+
+    // let node2 = this.findNode(index);
+    // console.log("hits remove", index, node2)
+    // node2.transition()
+    // .attr("fill, white");
+    // this.data = this.data.filter((e, i) => { return i !== index})
+    // this.text = this.text.filter((e, i) => { return i !== index})
+    // this.nodes = svgContainer.selectAll("circle")
+    //             .data(this.data)
+    //             .exit().remove()
+    // this.text = svgContainer.selectAll("text.circle")
+    // .data(this.data)
+    // .exit().remove()
+
+    // this.findNode(index).remove();
+    // this.findText(index).remove();
+
+    // this.data = this.data.filter((e, i) => { return i !== index})
+    // this.text = this.text.filter((e, i) => { return i !== index})
+
+  }
+
+  this.swapNodes = function(a, b,remove) {
+    let nodeA = this.findNode(a);
+    let nodeB = this.findNode(b);
+
+    let textA = this.findText(a);
+    let textB = this.findText(b);
+    if (remove) {
+      nodeA
+      .transition()
+      .attr("fill", "blue")
+      .transition()
+      .duration(1000)
+      .attr("cx", this.data[b].cx)
+      .attr("cy", this.data[b].cy)
+      .transition()
+      .attr("fill", "white")
+    }
+    else {
+    nodeA
+      .transition()
+      .attr("fill", "blue")
+      .transition()
+      .duration(1000)
+      .attr("cx", this.data[b].cx)
+      .attr("cy", this.data[b].cy)
+      .transition()
+      .attr("fill", "lightblue")
+    }
+    textA.transition()
+    .attr("fill", "white")
+    .transition()
+    .duration(1000)
+    .attr("x", this.data[b].cx)
+    .attr("y", this.data[b].cy)
+    .transition()
+    .attr("fill", "black")
+
+    nodeB
+    .transition()
+    .attr("fill", "blue")
+    .transition()
+    .duration(1000)
+    .attr("cx", this.data[a].cx)
+    .attr("cy", this.data[a].cy)
+    .transition()
+    .attr("fill", "lightblue")
+
+    textB.transition()
+    .attr("fill", "white")
+    .transition()
+    .duration(1000)
+    .attr("x", this.data[a].cx)
+    .attr("y", this.data[a].cy)
+    .transition()
+    .attr("fill", "black")
+
+    this.swapNodeData(a, b)
   }
 
   this.createBinaryTree = function(arr, start, radius, xSpacing, ySpacing) {
@@ -42,8 +169,11 @@ function Tree() {
     }
     this.nodes = svgContainer
                   .selectAll("circle")
-                  .order()
+                  .raise()
                   .on("click", addHighlight)
+    this.text = svgContainer
+                .selectAll("text.circle")
+                .raise()
   }
 
   this.size = function() {
@@ -52,7 +182,33 @@ function Tree() {
 
 }
 
+function createNodes(arr, start) {
+  let tree = new Tree();
+  tree.createBinaryTree(arr, start, 35, 200, 100, 35)
+  tree.nodes.call(circleAttr);
+  heapTree = tree;
+  // var promises = [[1,2,true], [5,6]].map((e,i) => {
+  //   if(e[2]) {
+  //     return new Promise((res,rej) => {
+  //       setTimeout(function() {
+  //         res(tree.swapNodes(e[0], e[1], e[2]))
+  //         console.log(`${i}th try`)
+  //       }, i * 2000)
+  //   })
+  //   }
+  //   else {
+  //   return new Promise((res,rej) => {
+  //       setTimeout(function() {
+  //         res(tree.swapNodes(e[0],e[1]))
+  //         console.log(`${i}th try`)
+  //       }, i * 2000)
+  //     })
+  //   }
+  // })
 
+  // Promise.all(promises).then(() => console.log('finished'))
+
+}
 
 function Node(value, index, depth, radius = 50, cx, cy) {
   this.value = value;
@@ -65,26 +221,7 @@ function Node(value, index, depth, radius = 50, cx, cy) {
   this.highlighted = false;
 }
 
-function createNodes(arr, start) {
-  let tree = new Tree();
-  tree.createBinaryTree(arr, start, 35, 200, 100, 35)
-  tree.nodes.call(circleAttr);
-
-  var texts = svgContainer.selectAll("text.circle")
-                            .data(tree.data)
-                            .enter()
-                            .append("text")
-                            .attr("class", "circle")
-                            .on("click", addHighlight);
-
-  texts.attr("x", function(d) { return d.cx - 5} )
-        .attr("y", function(d) { return d.cy + 5 })
-        .text(function (d) { return d.value })
-        .call(textAttr, regFillText, "sans-serif", "15px")
-}
-
 function createArray(arr, x, y, width, height) {
-
   var arrayData = arr.map((value, i) => {
     if (i > 0) { x += 50 }
     return { x: x, y: y, width: width, height: height, color: regFill, value: value }
@@ -126,8 +263,6 @@ function createArray(arr, x, y, width, height) {
 
   return arrayData;
 }
-
-
 
 function circleAttr(selection) {
   selection
