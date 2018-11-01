@@ -55,11 +55,7 @@ function Tree() {
 
   this.findText = function(index) {
     return this.text.filter((d) => d.index === index)
-    // console.log(this.text.data())
-    // console.log(index)
-    // return this.text.filter((d) => console.log('data index', index, d.index))
   }
-
 
   this.removeNode = function(index) {
 
@@ -85,23 +81,33 @@ function Tree() {
   }
 
   this.swapNodes = function(a, b,remove) {
+    var t = d3.transition().duration(1000);
+    this.updateNodes();
+    this.swapNodeData(a,b);
+
+    this.nodes.exit().transition(t).remove();
+    // this.nodes.enter().append("circle").transition
+    // this.
     let nodeA = this.findNode(a);
     let nodeB = this.findNode(b);
 
+    this.swapNodeData(a,b);
+
+    console.log('swapping a and b', nodeA.data(), nodeB.data())
     let textA = this.findText(a);
     let textB = this.findText(b);
-    if (remove) {
-      nodeA
-      .transition()
-      .attr("fill", "blue")
-      .transition()
-      .duration(1000)
-      .attr("cx", this.data[b].cx)
-      .attr("cy", this.data[b].cy)
-      .transition()
-      .attr("fill", "white")
-    }
-    else {
+    // if (remove) {
+    //   nodeA
+    //   .transition()
+    //   .attr("fill", "blue")
+    //   .transition()
+    //   .duration(1000)
+    //   .attr("cx", this.data[b].cx)
+    //   .attr("cy", this.data[b].cy)
+    //   .transition()
+    //   .attr("fill", "white")
+    // }
+    // else {
     nodeA
       .transition()
       .attr("fill", "blue")
@@ -109,9 +115,11 @@ function Tree() {
       .duration(1000)
       .attr("cx", this.data[b].cx)
       .attr("cy", this.data[b].cy)
+      // .attr("index", this.data[b].index)
       .transition()
-      .attr("fill", "lightblue")
-    }
+      // .attr("fill", "lightblue")
+      // .on('end', this.swapNodeData(a, b))
+    // }
     textA.transition()
     .attr("fill", "white")
     .transition()
@@ -139,8 +147,9 @@ function Tree() {
     .attr("y", this.data[a].cy)
     .transition()
     .attr("fill", "black")
+    .on('end', this.swapNodeData(a, b))
 
-    this.swapNodeData(a, b)
+    // this.swapNodeData(a, b)
   }
 
   this.createBinaryTree = function(arr, start, radius, xSpacing, ySpacing) {
@@ -179,7 +188,32 @@ function Tree() {
   this.size = function() {
     return d3.selectAll("circle").nodes().length;
   }
+  this.update = function() {
+    var t = d3.transition()
+    .duration(750);
 
+    // this.swapNodeData(1,2)
+
+    this.nodes = svgContainer.selectAll("circle")
+                  .data(this.data, function(d) { return d})
+    this.nodes.exit()
+          .attr("class", "exit")
+          .transition(t)
+          .attr("y",60)
+          .remove();
+    this.nodes.attr("class", "update")
+              .attr("y", 0)
+              .transition(t)
+              .attr("x", function (d, i) { return i * 32 })
+
+  this.nodes.enter().append("circle")
+                    .attr("class", "enter")
+                    .attr("dy",".35em")
+                    .attr("y", -60)
+                    .attr("x", function(d,i) { return i * 32 })
+                    .transition(t)
+                    .attr("y", 0)
+  }
 }
 
 function createNodes(arr, start) {
@@ -187,6 +221,9 @@ function createNodes(arr, start) {
   tree.createBinaryTree(arr, start, 35, 200, 100, 35)
   tree.nodes.call(circleAttr);
   heapTree = tree;
+  // tree.swapNodeData(1,2)
+  // tree.update();
+  console.log(tree.data)
   // var promises = [[1,2,true], [5,6]].map((e,i) => {
   //   if(e[2]) {
   //     return new Promise((res,rej) => {

@@ -54,8 +54,9 @@ function reheapifyDown(arr, length) {
     }
     //If the larger child's value is bigger than the current(parent) node, swap the values and continue the loop; otherwise it's a heap
     if (arr[index] < arr[bigChildIndex]) {
-      swap(arr, index, bigChildIndex)
       swaps.push([index,bigChildIndex]);
+      console.log('reheapifying', index, bigChildIndex);
+      swap(arr, index, bigChildIndex)
       index = bigChildIndex;
     }
     else {
@@ -65,13 +66,15 @@ function reheapifyDown(arr, length) {
 }
 
 function heapSort(arr) {
+
   let unsortedArrLength = arr.length;
   console.log(arr)
 
-  while (unsortedArrLength) {
+  while (unsortedArrLength > 1) {
     --unsortedArrLength;
-    swap(arr, 0, unsortedArrLength);
     swaps.push([0, unsortedArrLength])
+    swap(arr, 0, unsortedArrLength);
+    console.log("swapped first and last", 0, unsortedArrLength)
     reheapifyDown(arr, unsortedArrLength);
   }
 
