@@ -4,7 +4,7 @@ let arrayContainer;
 let start;
 let input;
 
-function calculateDimensions(arr) {
+function calcDimensions(arr) {
   let ySpacing = 100;
 
   depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1;
@@ -15,14 +15,14 @@ function calculateDimensions(arr) {
   // }
 }
 
-function createContainer(id, width, height) {
-  let container = d3.select(`div#${id}`)
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height)
+// function createContainer(id, width, height) {
+//   let container = d3.select(`div#${id}`)
+//     .append("svg")
+//     .attr("width", width)
+//     .attr("height", height)
 
-  return container;
-}
+//   return container;
+// }
 
 // function createVisual(id, width, height) {
 //   let container = d3.select(`div#${id}`)
@@ -33,18 +33,18 @@ function createContainer(id, width, height) {
 //   return container;
 // }
 
-// function addContainer(id, arr, width, height) {
-//   let box = calcDimensions(arr);
+function createContainer(id, arr, width, height) {
+  let box = calcDimensions(arr);
 
-//   // depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1 || 1;
+  depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1 || 1;
 
-//   let container = d3.select(`div#${id}`)
-//     .append('svg')
-//     .attr('width', width || box.width * 600 * (.8 / depth) * .75)
-//     .attr('height', height || box.height)
+  let container = d3.select(`div#${id}`)
+    .append('svg')
+    .attr('width', width || box.width * 600 * (.8 / depth) * .75)
+    .attr('height', height || box.height)
 
-//   return container;
-// }
+  return container;
+}
 
 
 function reset() {

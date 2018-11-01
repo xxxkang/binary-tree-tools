@@ -12,13 +12,14 @@ function Tree() {
   this.text = [];
 
   this.addNode = function(node) {
+    console.log('node', node)
     this.data.push(node);
     this.text = treeContainer.selectAll("text.circle")
     .data(this.data)
     .enter()
     .append("text")
     .attr("class", "circle")
-    .attr("x", function(d) { return d.cx - (d.radius * .1)} )
+    .attr("x", function(d) { return d.cx - (d.radius)} )
     .attr("y", function(d) { return d.cy + 5 })
     .text(function (d) { return d.value })
     .call(textAttr, regFillText, "sans-serif", "15px")
@@ -28,6 +29,7 @@ function Tree() {
                 .data(this.data)
                 .enter()
                 .append("circle")
+    console.log(this.data)
   }
 
   this.updateNodes = function() {
@@ -68,6 +70,7 @@ function Tree() {
     let i = 0;
     let node = {};
 
+
     while (i < arr.length) {
       let depth = Math.ceil(Math.log2(i + 2)) - 1;
       node = new Node(arr[i], i, depth, radius);
@@ -105,12 +108,13 @@ function Tree() {
 
 function createNodes(arr, start) {
   let tree = new Tree();
-  tree.createBinaryTree(arr, start, 35, 200, 100, 35)
+  tree.createBinaryTree(arr, start, 35, 200, 100)
   tree.nodes.call(circleAttr);
   heapTree = tree;
 }
 
 function Node(value, index, depth, radius = 50, cx, cy) {
+  // console.log('radius', radius)
   this.value = value;
   this.index = index;
   this.depth = depth;
