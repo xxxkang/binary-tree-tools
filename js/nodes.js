@@ -13,7 +13,7 @@ function Tree() {
 
   this.addNode = function(node) {
     this.data.push(node);
-    this.text = svgContainer.selectAll("text.circle")
+    this.text = treeContainer.selectAll("text.circle")
     .data(this.data)
     .enter()
     .append("text")
@@ -24,20 +24,14 @@ function Tree() {
     .call(textAttr, regFillText, "sans-serif", "15px")
     .on("click", addHighlight)
 
-    // this.text = svgContainer.selectAll("text.circle")
-    //             .data(this.data)
-    //             .enter()
-    //             .append("text")
-    //             .attr("class", "circle")
-
-    this.nodes = svgContainer.selectAll("circle")
+    this.nodes = treeContainer.selectAll("circle")
                 .data(this.data)
                 .enter()
                 .append("circle")
   }
 
   this.updateNodes = function() {
-    this.nodes = svgContainer.selectAll("circle")
+    this.nodes = treeContainer.selectAll("circle")
     .data(this.data)
     .enter()
     .append("circle")
@@ -58,99 +52,17 @@ function Tree() {
   }
 
   this.removeNode = function(index) {
+    this.findNode(index).remove();
+    this.findText(index).remove();
 
-    // let node2 = this.findNode(index);
-    // console.log("hits remove", index, node2)
-    // node2.transition()
-    // .attr("fill, white");
-    // this.data = this.data.filter((e, i) => { return i !== index})
-    // this.text = this.text.filter((e, i) => { return i !== index})
-    // this.nodes = svgContainer.selectAll("circle")
-    //             .data(this.data)
-    //             .exit().remove()
-    // this.text = svgContainer.selectAll("text.circle")
-    // .data(this.data)
-    // .exit().remove()
+    this.data = this.data.filter((e, i) => { return i !== index})
+    this.text = this.text.filter((e, i) => { return i !== index})
 
-    // this.findNode(index).remove();
-    // this.findText(index).remove();
-
-    // this.data = this.data.filter((e, i) => { return i !== index})
-    // this.text = this.text.filter((e, i) => { return i !== index})
-
+    this.nodes = treeContainer.selectAll("circle")
+            .data(this.data)
+            .exit().remove()
   }
 
-  this.swapNodes = function(a, b,remove) {
-    var t = d3.transition().duration(1000);
-    this.updateNodes();
-    this.swapNodeData(a,b);
-
-    this.nodes.exit().transition(t).remove();
-    // this.nodes.enter().append("circle").transition
-    // this.
-    let nodeA = this.findNode(a);
-    let nodeB = this.findNode(b);
-
-    this.swapNodeData(a,b);
-
-    console.log('swapping a and b', nodeA.data(), nodeB.data())
-    let textA = this.findText(a);
-    let textB = this.findText(b);
-    // if (remove) {
-    //   nodeA
-    //   .transition()
-    //   .attr("fill", "blue")
-    //   .transition()
-    //   .duration(1000)
-    //   .attr("cx", this.data[b].cx)
-    //   .attr("cy", this.data[b].cy)
-    //   .transition()
-    //   .attr("fill", "white")
-    // }
-    // else {
-    nodeA
-      .transition()
-      .attr("fill", "blue")
-      .transition()
-      .duration(1000)
-      .attr("cx", this.data[b].cx)
-      .attr("cy", this.data[b].cy)
-      // .attr("index", this.data[b].index)
-      .transition()
-      // .attr("fill", "lightblue")
-      // .on('end', this.swapNodeData(a, b))
-    // }
-    textA.transition()
-    .attr("fill", "white")
-    .transition()
-    .duration(1000)
-    .attr("x", this.data[b].cx)
-    .attr("y", this.data[b].cy)
-    .transition()
-    .attr("fill", "black")
-
-    nodeB
-    .transition()
-    .attr("fill", "blue")
-    .transition()
-    .duration(1000)
-    .attr("cx", this.data[a].cx)
-    .attr("cy", this.data[a].cy)
-    .transition()
-    .attr("fill", "lightblue")
-
-    textB.transition()
-    .attr("fill", "white")
-    .transition()
-    .duration(1000)
-    .attr("x", this.data[a].cx)
-    .attr("y", this.data[a].cy)
-    .transition()
-    .attr("fill", "black")
-    .on('end', this.swapNodeData(a, b))
-
-    // this.swapNodeData(a, b)
-  }
 
   this.createBinaryTree = function(arr, start, radius, xSpacing, ySpacing) {
     let i = 0;
@@ -171,16 +83,16 @@ function Tree() {
           node.cx = this.data[parent(i)].cx + xSpacing/depth;
         }
         node.cy = this.data[parent(i)].cy + ySpacing;
-        svgContainer.append("line").call(createLineAttr, "black", this.data[parent(i)].cx, this.data[parent(i)].cy, node.cx, node.cy);
+        treeContainer.append("line").call(createLineAttr, "black", this.data[parent(i)].cx, this.data[parent(i)].cy, node.cx, node.cy);
       }
       this.addNode(node);
       ++i;
     }
-    this.nodes = svgContainer
+    this.nodes = treeContainer
                   .selectAll("circle")
                   .raise()
                   .on("click", addHighlight)
-    this.text = svgContainer
+    this.text = treeContainer
                 .selectAll("text.circle")
                 .raise()
   }
@@ -188,32 +100,7 @@ function Tree() {
   this.size = function() {
     return d3.selectAll("circle").nodes().length;
   }
-  this.update = function() {
-    var t = d3.transition()
-    .duration(750);
 
-    // this.swapNodeData(1,2)
-
-    this.nodes = svgContainer.selectAll("circle")
-                  .data(this.data, function(d) { return d})
-    this.nodes.exit()
-          .attr("class", "exit")
-          .transition(t)
-          .attr("y",60)
-          .remove();
-    this.nodes.attr("class", "update")
-              .attr("y", 0)
-              .transition(t)
-              .attr("x", function (d, i) { return i * 32 })
-
-  this.nodes.enter().append("circle")
-                    .attr("class", "enter")
-                    .attr("dy",".35em")
-                    .attr("y", -60)
-                    .attr("x", function(d,i) { return i * 32 })
-                    .transition(t)
-                    .attr("y", 0)
-  }
 }
 
 function createNodes(arr, start) {
@@ -221,30 +108,6 @@ function createNodes(arr, start) {
   tree.createBinaryTree(arr, start, 35, 200, 100, 35)
   tree.nodes.call(circleAttr);
   heapTree = tree;
-  // tree.swapNodeData(1,2)
-  // tree.update();
-  console.log(tree.data)
-  // var promises = [[1,2,true], [5,6]].map((e,i) => {
-  //   if(e[2]) {
-  //     return new Promise((res,rej) => {
-  //       setTimeout(function() {
-  //         res(tree.swapNodes(e[0], e[1], e[2]))
-  //         console.log(`${i}th try`)
-  //       }, i * 2000)
-  //   })
-  //   }
-  //   else {
-  //   return new Promise((res,rej) => {
-  //       setTimeout(function() {
-  //         res(tree.swapNodes(e[0],e[1]))
-  //         console.log(`${i}th try`)
-  //       }, i * 2000)
-  //     })
-  //   }
-  // })
-
-  // Promise.all(promises).then(() => console.log('finished'))
-
 }
 
 function Node(value, index, depth, radius = 50, cx, cy) {
@@ -260,43 +123,74 @@ function Node(value, index, depth, radius = 50, cx, cy) {
 
 function createArray(arr, x, y, width, height) {
   var arrayData = arr.map((value, i) => {
-    if (i > 0) { x += 50 }
-    return { x: x, y: y, width: width, height: height, color: regFill, value: value }
+    if (i > 0) {
+      x += 50
+    }
+    return {
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+      color: regFill,
+      value: value
+    }
   })
 
   var elementsArr = arrayContainer.selectAll("rect")
-                                    .data(arrayData)
-                                    .enter()
-                                    .append("rect")
-                                    .on("click", addHighlight);
+    .data(arrayData)
+    .enter()
+    .append("rect")
+    .on("click", addHighlight);
 
-  elementsArr.attr("x", function(r) { return r.x })
-              .attr("y", function(r) { return r.y })
-              .attr("width", function(r) { return r.width })
-              .attr("height", function(r) { return r.height })
-              .attr("fill", function(r) { return r.color })
-              .attr("stroke", "white")
+  elementsArr.attr("x", function (r) {
+      return r.x
+    })
+    .attr("y", function (r) {
+      return r.y
+    })
+    .attr("width", function (r) {
+      return r.width
+    })
+    .attr("height", function (r) {
+      return r.height
+    })
+    .attr("fill", function (r) {
+      return r.color
+    })
+    .attr("stroke", "white")
 
   arrayContainer.selectAll("text.rect")
-                  .data(arrayData)
-                  .enter()
-                  .append("text")
-                  .attr("class", "rect")
-                  .on("click", addHighlight)
-                  .attr("x", function(d) { return d.x + d.width/ 3} )
-                  .attr("y", function(d) { return d.y + 30 })
-                  .text(function (d) { return d.value })
-                  .call(textAttr, regFillText, "sans-serif", "15px")
+    .data(arrayData)
+    .enter()
+    .append("text")
+    .attr("class", "rect")
+    .on("click", addHighlight)
+    .attr("x", function (d) {
+      return d.x + d.width / 3
+    })
+    .attr("y", function (d) {
+      return d.y + 30
+    })
+    .text(function (d) {
+      return d.value
+    })
+    .call(textAttr, regFillText, "sans-serif", "15px")
 
   arrayContainer.selectAll("text.index")
-                  .data(arrayData)
-                  .enter()
-                  .append("text")
-                  .attr("class", "index")
-                  .text(function(d, i) { return `[ ${i} ]` })
-                  .attr("x", function(d) { return d.x + 15 })
-                  .attr("y", function(d) { return d.y - 15 })
-                  .call(textAttr, regFillText, "sans-serif", "15px")
+    .data(arrayData)
+    .enter()
+    .append("text")
+    .attr("class", "index")
+    .text(function (d, i) {
+      return `[ ${i} ]`
+    })
+    .attr("x", function (d) {
+      return d.x + 15
+    })
+    .attr("y", function (d) {
+      return d.y - 15
+    })
+    .call(textAttr, regFillText, "sans-serif", "15px")
 
   return arrayData;
 }
