@@ -6,20 +6,32 @@ var highlightFillText = "white"
 
 let heapTree = {};
 
+function Node(value, index, depth, radius = 50, cx, cy) {
+  this.value = value;
+  this.index = index;
+  this.depth = depth;
+  this.radius = radius;
+  this.cx = cx;
+  this.cy = cy;
+  this.left = null;
+  this.right = null;
+  this.fill = regFill;
+  this.highlighted = false;
+}
+
 function Tree() {
   this.nodes = [];
   this.data = [];
   this.text = [];
 
   this.addNode = function(node) {
-    console.log('node', node)
     this.data.push(node);
     this.text = treeContainer.selectAll("text.circle")
     .data(this.data)
     .enter()
     .append("text")
     .attr("class", "circle")
-    .attr("x", function(d) { return d.cx - (d.radius)} )
+    .attr("x", function(d) { return d.cx - (d.radius * .1)} )
     .attr("y", function(d) { return d.cy + 5 })
     .text(function (d) { return d.value })
     .call(textAttr, regFillText, "sans-serif", "15px")
@@ -29,7 +41,6 @@ function Tree() {
                 .data(this.data)
                 .enter()
                 .append("circle")
-    console.log(this.data)
   }
 
   this.updateNodes = function() {
@@ -65,15 +76,15 @@ function Tree() {
             .exit().remove()
   }
 
-
   this.createBinaryTree = function(arr, start, radius, xSpacing, ySpacing) {
     let i = 0;
     let node = {};
 
-
     while (i < arr.length) {
       let depth = Math.ceil(Math.log2(i + 2)) - 1;
+
       node = new Node(arr[i], i, depth, radius);
+
       if (i === 0) {
         node.cx = start;
         node.cy = 50;
@@ -98,32 +109,79 @@ function Tree() {
     this.text = treeContainer
                 .selectAll("text.circle")
                 .raise()
+    this.nodes.call(circleAttr);
+  }
+
+
+
+  this.createBST = function(inputArr, start, radius, xSpacing, ySpacing) {
+    let midPoint = Math.floor(inputArr.length / 2);
+    let root = new Node(inputArr[midPoint], null, 1, radius, start, ySpacing);
+
+    const insertNode = (arr, depth, cx) => {
+      if (!arr.length) { return; }
+      let mid = Math.floor(arr.length / 2);
+      let node = new Node(arr[mid], null, depth, radius, cx, depth * ySpacing);
+
+      node.left = insertNode(arr.slice(0, mid), depth + 1, cx - xSpacing);
+      node.right = insertNode(arr.slice(mid + 1), depth + 1, cx + ySpacing);
+
+      this.addNode(node)
+    }
+
+    root.left = insertNode(inputArr.slice(0, midPoint), 2, start - xSpacing);
+    root.right = insertNode(inputArr.slice(midPoint + 1), 2, start + xSpacing);
+    // nodes.push(root);
+    this.addNode(root)
+    // console.log(nodes);
+
+    this.nodes = treeContainer
+    .selectAll("circle")
+    .raise()
+
+    this.text = treeContainer
+    .selectAll("text.circle")
+    .raise()
+
+    this.nodes.call(circleAttr);
+
+    // treeContainer = d3.select(`div#binary-tree`)
+    //     .append("svg")
+    //     .attr("width", 600)
+    //     .attr("height", 500)
+
+    // let bstNodes = treeContainer.selectAll("circle")
+    //             .data(nodes)
+    //             .enter()
+    //             .append("circle")
+
+    // bstNodes.call(circleAttr);
+
+    // let texts = treeContainer.selectAll("text.circle")
+    // .data(nodes)
+    // .enter()
+    // .append("text")
+    // .attr("class", "circle")
+    // .on("click", addHighlight);
+
+    // texts.attr("x", function(d) { return d.cx} )
+    // .attr("y", function(d) { return d.cy })
+    // .text(function (d) { return d.value })
+    // .call(textAttr, regFillText, "sans-serif", "15px")
   }
 
   this.size = function() {
     return d3.selectAll("circle").nodes().length;
   }
-
 }
 
-function createNodes(arr, start) {
-  let tree = new Tree();
-  tree.createBinaryTree(arr, start, 35, 200, 100)
-  tree.nodes.call(circleAttr);
-  heapTree = tree;
-}
+// function createNodes(arr, start) {
+//   let tree = new Tree();
+//   tree.createBinaryTree(arr, start, 35, 200, 100)
+//   // tree.nodes.call(circleAttr);
+//   // heapTree = tree;
+// }
 
-function Node(value, index, depth, radius = 50, cx, cy) {
-  // console.log('radius', radius)
-  this.value = value;
-  this.index = index;
-  this.depth = depth;
-  this.radius = radius;
-  this.cx = cx;
-  this.cy = cy;
-  this.fill = regFill;
-  this.highlighted = false;
-}
 
 function createArray(arr, x, y, width, height) {
   var arrayData = arr.map((value, i) => {

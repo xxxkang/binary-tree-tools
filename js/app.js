@@ -65,7 +65,7 @@ function createVisuals(arr) {
   treeContainer = createContainer("binary-tree", arr);
   arrayContainer = createContainer("array-visual", arr, arr.length * 55, 300);
   start = treeContainer.attr("width") / 2;
-  createNodes(arr, start);
+  createBinaryTree();
   createArray(arr, 0, 30, 50, 50);
 }
 
@@ -77,8 +77,7 @@ document.getElementById('array').onsubmit = function (evt) {
   document.querySelector('#instructions').innerHTML = "Click a value in the binary tree or array to highlight its location in both visualizations.";
   if (evt.target.array.value !== '') {
     input = evt.target.array.value.trim().split(/\s+|\,+/g).map((num) => parseInt(num));
-    treeContainer = createVisuals("binary-tree", input, height, width);
-    arrayContainer = createVisuals("array-visual");
+    createVisuals(input)
   }
 }
 
@@ -90,13 +89,22 @@ function heapify() {
   document.getElementById('visual-title').innerHTML = "Max-Heap Binary Tree Visualization";
 }
 
+function createBinaryTree() {
+  let tree = new Tree()
+  tree.createBinaryTree(input, start, 35, 200, 100)
+}
+
 function createBST() {
   reset();
   input.sort((a, b) => a - b);
   document.querySelector('#visual-title').innerHTML = "Binary Search Tree Visualization";
   document.querySelector('#instructions').innerHTML = "The input array sorted and arranged into a Binary Search Tree.";
   document.querySelector('#array-descrip').innerHTML = "";
-  createBSTNodes(input);
+  treeContainer = createContainer("binary-tree", input);
+  start = treeContainer.attr("width") / 2;
+  let tree = new Tree();
+  tree.createBST(input, start, 35, 200, 100)
+  // createBSTNodes(input);
 }
 
 // function startHeapSort() {
