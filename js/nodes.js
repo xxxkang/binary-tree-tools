@@ -37,17 +37,18 @@ function Tree() {
     .enter()
     .append("text")
     .attr("class", "circle")
-    .transition()
     .attr("x", function(d) { return d.cx - (d.radius * .1)} )
-    .attr("y", function(d) { return d.cy + 5 })
+    .attr("y", 0)
     .text(function (d) { return d.value })
+    .transition()
+    .duration(100)
+    .attr("y", function(d) { return d.cy + 5 })
     .call(textAttr, regFillText, "sans-serif", "15px")
 
     this.nodes = treeContainer.selectAll("circle")
                 .data(this.data)
                 .enter()
                 .append("circle")
-                // .transition()
   }
 
   this.updateNodes = function() {
@@ -174,8 +175,6 @@ function Tree() {
   this.size = function() {
     return d3.selectAll("circle").nodes().length;
   }
-
-
 }
 
 function createArray(arr, x, y, width, height) {
@@ -244,11 +243,13 @@ function createArray(arr, x, y, width, height) {
 
 function circleAttr(selection) {
   selection
-    .transition()
-    .attr("cy", function(c) { return c.cy })
     .attr("cx", function(c) { return c.cx })
+    .attr("cy", 0)
     .attr("r", function(c) { return c.radius })
-    .attr("fill", function(c) { return c.fill });
+    .attr("fill", function(c) { return c.fill })
+    .transition()
+    .duration(100)
+    .attr("cy", function(c) { return c.cy })
 }
 
 function textAttr(selection, fill, fontFamily, fontSize) {
@@ -260,13 +261,15 @@ function textAttr(selection, fill, fontFamily, fontSize) {
 
 function createLineAttr(selection, stroke, x1, y1, x2, y2) {
   selection
-    .transition()
-    .delay(200)
-    .style("stroke", stroke)
-    .attr("x1", x1)
-    .attr("y1", y1)
-    .attr("x2", x2)
-    .attr("y2", y2)
+  .style("stroke", stroke)
+  .attr("x1", x1)
+  .attr("y1", 0)
+  .attr("x2", x2)
+  .attr("y2", 0)
+  .transition()
+  .duration(100)
+  .attr("y1", y1)
+  .attr("y2", y2)
 }
 
 function addHighlight(data, index) {
