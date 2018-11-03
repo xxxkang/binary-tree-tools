@@ -37,6 +37,7 @@ function Tree() {
     .enter()
     .append("text")
     .attr("class", "circle")
+    .transition()
     .attr("x", function(d) { return d.cx - (d.radius * .1)} )
     .attr("y", function(d) { return d.cy + 5 })
     .text(function (d) { return d.value })
@@ -46,6 +47,7 @@ function Tree() {
                 .data(this.data)
                 .enter()
                 .append("circle")
+                // .transition()
   }
 
   this.updateNodes = function() {
@@ -242,6 +244,7 @@ function createArray(arr, x, y, width, height) {
 
 function circleAttr(selection) {
   selection
+    .transition()
     .attr("cy", function(c) { return c.cy })
     .attr("cx", function(c) { return c.cx })
     .attr("r", function(c) { return c.radius })
@@ -257,6 +260,8 @@ function textAttr(selection, fill, fontFamily, fontSize) {
 
 function createLineAttr(selection, stroke, x1, y1, x2, y2) {
   selection
+    .transition()
+    .delay(200)
     .style("stroke", stroke)
     .attr("x1", x1)
     .attr("y1", y1)
