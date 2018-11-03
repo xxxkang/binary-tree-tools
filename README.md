@@ -1,6 +1,6 @@
-# Heap & Binary Tree Visualization
+# Binary Tree Visualization
 
-An interactive tool to arrange an array into a heap and view as a binary tree.
+An interactive tool to view an array as a binary tree,arrange it into a heap, or create a binary search tree.
 
 ## Link
 
