@@ -150,10 +150,12 @@ function Tree() {
     root.left = insertNode(inputArr.slice(0, midPoint), 1, start - xSpacing);
     root.right = insertNode(inputArr.slice(midPoint + 1), 1, start + xSpacing);
 
-    treeContainer.append("line").call(createLineAttr, "black", start, radius, start - xSpacing, radius + ySpacing);
-
+    if (inputArr.slice(0, midPoint).length) {
+      treeContainer.append("line").call(createLineAttr, "black", start, radius, start - xSpacing, radius + ySpacing);
+    }
+    if (inputArr.slice(midPoint + 1).length) {
     treeContainer.append("line").call(createLineAttr, "black", start, radius, start + xSpacing, radius + ySpacing);
-
+    }
     this.addNode(root)
 
     this.nodes = treeContainer
@@ -170,6 +172,8 @@ function Tree() {
   this.size = function() {
     return d3.selectAll("circle").nodes().length;
   }
+
+
 }
 
 function createArray(arr, x, y, width, height) {

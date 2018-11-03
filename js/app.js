@@ -20,7 +20,10 @@ function heapify() {
   reset();
   makeHeap(input, input.length);
   createBinaryTreeAndArr(input);
-  document.getElementById('array-descrip').innerHTML = "Array In Max-Heap <p class='subtext'> Rule: The parent's value is always greater than or equal to the values of its children.</p>";
+  document.getElementById('array-descrip').innerHTML = "Array In Max-Heap";
+
+  document.getElementById('instructions').innerHTML = "<p> Rule: The parent's value is always greater than or equal to the values of its children.</p>";
+
   document.getElementById('visual-title').innerHTML = "Max-Heap Binary Tree Visualization";
 }
 
