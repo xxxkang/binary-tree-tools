@@ -4,9 +4,15 @@ var highlightFill = "blue";
 var regFillText = "black"
 var highlightFillText = "white"
 
-let heapTree = {};
+let treeContainer;
+let arrayContainer;
+let start;
 
-function Node(value, index, depth, radius = 50, cx, cy) {
+const xSpacing = 200;
+const ySpacing = 100;
+const radius = 35;
+
+function Node(value, index, depth, cx, cy) {
   this.value = value;
   this.index = index;
   this.depth = depth;
@@ -35,7 +41,6 @@ function Tree() {
     .attr("y", function(d) { return d.cy + 5 })
     .text(function (d) { return d.value })
     .call(textAttr, regFillText, "sans-serif", "15px")
-    .on("click", addHighlight)
 
     this.nodes = treeContainer.selectAll("circle")
                 .data(this.data)
@@ -76,18 +81,21 @@ function Tree() {
             .exit().remove()
   }
 
-  this.createBinaryTree = function(arr, start, radius, xSpacing, ySpacing) {
+  this.createBinaryTree = function(arr) {
+    treeContainer = createContainer("binary-tree", arr);
+    start = treeContainer.attr("width") / 2;
+
     let i = 0;
     let node = {};
 
     while (i < arr.length) {
       let depth = Math.ceil(Math.log2(i + 2)) - 1;
 
-      node = new Node(arr[i], i, depth, radius);
+      node = new Node(arr[i], i, depth);
 
       if (i === 0) {
         node.cx = start;
-        node.cy = 50;
+        node.cy = radius;
       }
       else {
         if (i == leftChild(parent(i))) {
@@ -109,31 +117,44 @@ function Tree() {
     this.text = treeContainer
                 .selectAll("text.circle")
                 .raise()
+                .on("click", addHighlight)
     this.nodes.call(circleAttr);
   }
 
+  this.createBinarySearchTree = function(inputArr) {
+    treeContainer = createContainer("binary-tree", inputArr);
+    start = treeContainer.attr("width") / 2;
 
-
-  this.createBST = function(inputArr, start, radius, xSpacing, ySpacing) {
     let midPoint = Math.floor(inputArr.length / 2);
-    let root = new Node(inputArr[midPoint], null, 1, radius, start, ySpacing);
+    let root = new Node(inputArr[midPoint], null, 1, start, radius);
 
     const insertNode = (arr, depth, cx) => {
       if (!arr.length) { return; }
       let mid = Math.floor(arr.length / 2);
-      let node = new Node(arr[mid], null, depth, radius, cx, depth * ySpacing);
+      let node = new Node(arr[mid], null, depth, cx , radius + (depth * ySpacing));
+      let nextDepth = depth + 1;
 
-      node.left = insertNode(arr.slice(0, mid), depth + 1, cx - xSpacing);
-      node.right = insertNode(arr.slice(mid + 1), depth + 1, cx + ySpacing);
+      node.left = insertNode(arr.slice(0, mid), nextDepth, cx - xSpacing/nextDepth);
+      node.right = insertNode(arr.slice(mid + 1), nextDepth, cx + xSpacing/nextDepth);
+
+      if (arr.slice(0, mid).length) {
+      treeContainer.append("line").call(createLineAttr, "black", cx, radius+(depth * ySpacing), cx - xSpacing/nextDepth, radius + nextDepth * ySpacing);
+      }
+      if (arr.slice(mid + 1).length) {
+      treeContainer.append("line").call(createLineAttr, "black", cx, radius+(depth * ySpacing), cx + xSpacing/nextDepth, radius + nextDepth * ySpacing);
+      }
 
       this.addNode(node)
     }
 
-    root.left = insertNode(inputArr.slice(0, midPoint), 2, start - xSpacing);
-    root.right = insertNode(inputArr.slice(midPoint + 1), 2, start + xSpacing);
-    // nodes.push(root);
+    root.left = insertNode(inputArr.slice(0, midPoint), 1, start - xSpacing);
+    root.right = insertNode(inputArr.slice(midPoint + 1), 1, start + xSpacing);
+
+    treeContainer.append("line").call(createLineAttr, "black", start, radius, start - xSpacing, radius + ySpacing);
+
+    treeContainer.append("line").call(createLineAttr, "black", start, radius, start + xSpacing, radius + ySpacing);
+
     this.addNode(root)
-    // console.log(nodes);
 
     this.nodes = treeContainer
     .selectAll("circle")
@@ -144,44 +165,12 @@ function Tree() {
     .raise()
 
     this.nodes.call(circleAttr);
-
-    // treeContainer = d3.select(`div#binary-tree`)
-    //     .append("svg")
-    //     .attr("width", 600)
-    //     .attr("height", 500)
-
-    // let bstNodes = treeContainer.selectAll("circle")
-    //             .data(nodes)
-    //             .enter()
-    //             .append("circle")
-
-    // bstNodes.call(circleAttr);
-
-    // let texts = treeContainer.selectAll("text.circle")
-    // .data(nodes)
-    // .enter()
-    // .append("text")
-    // .attr("class", "circle")
-    // .on("click", addHighlight);
-
-    // texts.attr("x", function(d) { return d.cx} )
-    // .attr("y", function(d) { return d.cy })
-    // .text(function (d) { return d.value })
-    // .call(textAttr, regFillText, "sans-serif", "15px")
   }
 
   this.size = function() {
     return d3.selectAll("circle").nodes().length;
   }
 }
-
-// function createNodes(arr, start) {
-//   let tree = new Tree();
-//   tree.createBinaryTree(arr, start, 35, 200, 100)
-//   // tree.nodes.call(circleAttr);
-//   // heapTree = tree;
-// }
-
 
 function createArray(arr, x, y, width, height) {
   var arrayData = arr.map((value, i) => {
@@ -204,22 +193,12 @@ function createArray(arr, x, y, width, height) {
     .append("rect")
     .on("click", addHighlight);
 
-  elementsArr.attr("x", function (r) {
-      return r.x
-    })
-    .attr("y", function (r) {
-      return r.y
-    })
-    .attr("width", function (r) {
-      return r.width
-    })
-    .attr("height", function (r) {
-      return r.height
-    })
-    .attr("fill", function (r) {
-      return r.color
-    })
-    .attr("stroke", "white")
+  elementsArr.attr("x", function (r) { return r.x })
+              .attr("y", function (r) { return r.y })
+              .attr("width", function (r) { return r.width })
+              .attr("height", function (r) { return r.height })
+              .attr("fill", function (r) { return r.color })
+              .attr("stroke", "white")
 
   arrayContainer.selectAll("text.rect")
     .data(arrayData)
@@ -298,3 +277,20 @@ function removeHighlight() {
   d3.selectAll("text.rect").attr("fill", regFillText);
 }
 
+function calcDimensions(arr) {
+  let depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1;
+  return { width: Math.pow(2, depth), height: ySpacing + ySpacing * depth, depth: depth }
+}
+
+function createContainer(id, arr, width, height) {
+  let box = calcDimensions(arr);
+
+  let depth = Math.ceil(Math.log2((arr.length - 1) + 2)) - 1 || 1;
+
+  let container = d3.select(`div#${id}`)
+    .append('svg')
+    .attr('width', width || box.width * 600 * (.8 / depth) * .75)
+    .attr('height', height || box.height)
+
+  return container;
+}
