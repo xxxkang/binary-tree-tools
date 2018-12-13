@@ -7,7 +7,7 @@ function reset() {
 function treeAndArray() {
   reset();
   let inputText = document.getElementById("array-input")
-  document.querySelector('#visual-title').innerHTML = "Binary Tree Visualization";
+  document.querySelector('#visual-title').innerHTML = "Binary Tree And Array";
   document.querySelector('#instructions').innerHTML = "Click a value in the binary tree or array to highlight its corresponding location in the data set.";
   if (inputText.value !== '') {
       input = inputText.value.trim().split(/\s+|\,+/g).map((num) => parseInt(num));
@@ -40,7 +40,7 @@ function createBinarySearchTree() {
     reset();
     input = inputText.value.trim().split(/\s+|\,+/g).map((num) => parseInt(num));
     input.sort((a, b) => a - b);
-    document.querySelector('#visual-title').innerHTML = "Binary Search Tree Visualization";
+    document.querySelector('#visual-title').innerHTML = "Binary Search Tree";
     document.querySelector('#instructions').innerHTML = "The input data sorted and arranged into a Binary Search Tree.";
     let tree = new Tree();
     tree.createBinarySearchTree(input)
