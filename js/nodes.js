@@ -1,5 +1,5 @@
-var regFill = "#99dd99";
-var highlightFill = "#11490b";
+var regFill = "lightblue";
+var highlightFill = "blue";
 
 var regFillText = "black"
 var highlightFillText = "white"
@@ -216,7 +216,7 @@ function createArray(arr, x, y, width, height) {
     .attr("x", d => d.x + (d.width / 2) - (d.value.toString().length*4))
     .attr("y", d => d.y + 30)
     .text(d => d.value)
-    .call(textAttr, regFillText, "sans-serif", "15px")
+    .call(textAttr, regFillText, "sans-serif", "1em")
 
   arrayContainer.selectAll("text.index")
     .data(arrayData)
