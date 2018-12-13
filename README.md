@@ -4,7 +4,7 @@ An interactive tool to view an array as a binary tree, arrange it into a heap, o
 
 ## Link
 
-https://anacsanchez.github.io/visual-binary-tree/
+https://anacsanchez.github.io/Binary-Tree-Visualization/
 
 ## Built With
 * [D3.js](https://github.com/d3/d3)
