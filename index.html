@@ -5,21 +5,22 @@
     <title>Binary Tree Visualization</title>
   </head>
   <body>
-    <div class="input-form">
-      <form id="array">
-        <label>Enter an array:</label>
-        <input type="text" name="array" />
-        <input type="submit" value="Submit"/>
-      </form>
+    <header>
+      <div id="title">Binary Tree Visualization</div>
+      <label>Enter an array:</label><br />
+      <input type="text" id="array-input" name="array" />
+      <div id="options">
+        <button onclick="treeAndArray()">Binary Tree (As Is)</button>
+        <button onclick="heapify()">Max-Heap</button>
+        <button onclick="createBinarySearchTree()">Binary Search Tree</button>
+      </div>
+    </header>
+    <div id="blurb">
+      <div id="visual-title">Binary Tree and Array</div>
+      <div id="instructions">Click a value in the binary tree or array to highlight its corresponding location in the data set.</div>
     </div>
-    <button onclick="heapify()">Heapify</button>
-    <button onclick="createBinarySearchTree()">Binary Search Tree</button>
-    <h3 id="visual-title">Binary Tree Visualization</h3>
-    <p id="instructions">Click a value in the binary tree or array to highlight its location in both visualizations.</p>
     <div id="binary-tree"></div>
-    <h3 id="array-descrip">Array</h3>
     <div id="array-visual"></div>
-
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="./js/nodes.js"></script>
     <script src="./js/heap.js"></script>
