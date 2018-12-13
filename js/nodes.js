@@ -1,5 +1,5 @@
-var regFill = "lightblue";
-var highlightFill = "blue";
+var regFill = "#99dd99";
+var highlightFill = "#11490b";
 
 var regFillText = "black"
 var highlightFillText = "white"
@@ -37,13 +37,13 @@ function Tree() {
     .enter()
     .append("text")
     .attr("class", "circle")
-    .attr("x", function(d) { return d.cx - (d.radius * .1)} )
+    .attr("x", d => d.cx - (d.value.toString().length*4))
     .attr("y", 0)
-    .text(function (d) { return d.value })
+    .text(d => d.value)
     .transition()
     .duration(100)
-    .attr("y", function(d) { return d.cy + 5 })
-    .call(textAttr, regFillText, "sans-serif", "15px")
+    .attr("y", d => d.cy + 5)
+    .call(textAttr, regFillText, "sans-serif", "1em")
 
     this.nodes = treeContainer.selectAll("circle")
                 .data(this.data)
@@ -198,12 +198,14 @@ function createArray(arr, x, y, width, height) {
     .append("rect")
     .on("click", addHighlight);
 
-  elementsArr.attr("x", function (r) { return r.x })
-              .attr("y", function (r) { return r.y })
-              .attr("width", function (r) { return r.width })
-              .attr("height", function (r) { return r.height })
-              .attr("fill", function (r) { return r.color })
-              .attr("stroke", "white")
+  d3.select("#array-visual").attr("align","center")
+
+  elementsArr.attr("x", d => d.x)
+              .attr("y", d => d.y)
+              .attr("width", d => d.width)
+              .attr("height", d => d.height)
+              .attr("fill", d => d.color)
+              .attr("stroke", "black")
 
   arrayContainer.selectAll("text.rect")
     .data(arrayData)
@@ -211,15 +213,9 @@ function createArray(arr, x, y, width, height) {
     .append("text")
     .attr("class", "rect")
     .on("click", addHighlight)
-    .attr("x", function (d) {
-      return d.x + d.width / 3
-    })
-    .attr("y", function (d) {
-      return d.y + 30
-    })
-    .text(function (d) {
-      return d.value
-    })
+    .attr("x", d => d.x + (d.width / 2) - (d.value.toString().length*4))
+    .attr("y", d => d.y + 30)
+    .text(d => d.value)
     .call(textAttr, regFillText, "sans-serif", "15px")
 
   arrayContainer.selectAll("text.index")
@@ -227,15 +223,9 @@ function createArray(arr, x, y, width, height) {
     .enter()
     .append("text")
     .attr("class", "index")
-    .text(function (d, i) {
-      return `[ ${i} ]`
-    })
-    .attr("x", function (d) {
-      return d.x + 15
-    })
-    .attr("y", function (d) {
-      return d.y - 15
-    })
+    .text((d, i) => `[ ${i} ]`)
+    .attr("x", d => d.x + 15)
+    .attr("y", d => d.y - 15)
     .call(textAttr, regFillText, "sans-serif", "15px")
 
   return arrayData;
