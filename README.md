@@ -1,6 +1,6 @@
 # Binary Tree Visualization
 
-An interactive tool to view a binary tree represented by a serialized array.
+An interactive tool to visually display a binary tree represented by a serialized array.
 
 ## Link
 
