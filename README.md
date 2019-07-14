@@ -1,8 +1,8 @@
 # Binary Tree Visualization
 
-An interactive tool to view an array as a binary tree, arrange it into a heap, or create a binary search tree.
+An interactive tool to view a binary tree represented by a serialized array.
 
-# Usage
+## Usage
 
 The tool converts a input string representing a binary tree in to a visual representation of the tree. The serialization `[1,2,3,4,null,6,7]` would look like the following:
 
