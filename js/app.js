@@ -55,7 +55,7 @@ function createBinarySearchTree() {
 }
 
 //default values
-input = [3, 4, 2, 9, 8, 7, 12];
+input = [3, 4, 5, 9, , 6, 12];
 let inputTest = document.getElementById("array-input")
 inputTest.value = input;
 createBinaryTreeAndArr(input);
