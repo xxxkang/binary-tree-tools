@@ -6,11 +6,13 @@ An interactive tool to view an array as a binary tree, arrange it into a heap, o
 
 The tool converts a input string representing a binary tree in to a visual representation of the tree. The serialization `[1,2,3,4,null,6,7]` would look like the following:
 
+```python
      1
     / \
    2   3
   /   / \
  4   6   7
+```
 
 Note that the non-numeric element will be interpreted as a missing child node.
 
