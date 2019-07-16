@@ -17,7 +17,6 @@ const xArr = 2;
 const yArr = 30;
 const arrRectSize = 50;
 
-
 /*
 Element of an array.
 */
@@ -32,7 +31,6 @@ class ArrayElement {
     this.color = regFill;
   }
 }
-
 
 /*
 Node of a tree.
@@ -52,7 +50,6 @@ class Node {
   }
 }
 
-
 /*
 Binary tree.
 */
@@ -63,7 +60,7 @@ class Tree {
     this.width = 0;
     this.serialization = arr;
     this.deserialize();
-  };
+  }
 
   deserialize() {
     let queue = [];
@@ -86,27 +83,25 @@ class Tree {
       // Construct left child of current node
       if (isNaN(this.serialization[i])) {
         curNode.left = {};
-      }
-      else {
-        node = new Node(this.serialization[i], i, curDepth+1);
+      } else {
+        node = new Node(this.serialization[i], i, curDepth + 1);
         curNode.left = node;
-        queue.push([node, curDepth+1]);
+        queue.push([node, curDepth + 1]);
       }
       // Construct right child of current node
-      if (isNaN(this.serialization[i+1])) {
+      if (isNaN(this.serialization[i + 1])) {
         curNode.right = {};
-      }
-      else {
-        node = new Node(this.serialization[i+1], i+1, curDepth+1);
+      } else {
+        node = new Node(this.serialization[i + 1], i + 1, curDepth + 1);
         curNode.right = node;
-        queue.push([node, curDepth+1]);
+        queue.push([node, curDepth + 1]);
       }
       // Process two nodes in each loop
       i += 2;
     }
     // Calculate the maximum width of the tree
-    this.width = Math.pow(2, this.height+1);
-  };
+    this.width = Math.pow(2, this.height + 1);
+  }
 
   /*
   Create a visual representation of the array serialization of the tree.
@@ -115,11 +110,13 @@ class Tree {
     let serializationArrayData = [];
     let x = xArr;
     for (let i = 0; i < this.serialization.length; i++) {
-      serializationArrayData.push(new ArrayElement(this.serialization[i], i, x, yArr));
+      serializationArrayData.push(
+        new ArrayElement(this.serialization[i], i, x, yArr)
+      );
       x = x + arrRectSize;
     }
     drawArray(serializationArrayData);
-  };
+  }
 
   /*
   Create a visual representation of preorder traversal for th tree.
@@ -148,11 +145,13 @@ class Tree {
 
     let x = xArr;
     for (let i = 0; i < preorder.length; i++) {
-      preorderArrayData.push(new ArrayElement(preorder[i].value, preorder[i].index, x, yArr));
+      preorderArrayData.push(
+        new ArrayElement(preorder[i].value, preorder[i].index, x, yArr)
+      );
       x = x + arrRectSize;
     }
     drawArray(preorderArrayData);
-  };
+  }
 
   /*
   Create a visualization of inorder tree traversal.
@@ -174,7 +173,9 @@ class Tree {
 
     let x = xArr;
     for (let i = 0; i < inorder.length; i++) {
-      inorderArrayData.push(new ArrayElement(inorder[i].value, inorder[i].index, x, yArr));
+      inorderArrayData.push(
+        new ArrayElement(inorder[i].value, inorder[i].index, x, yArr)
+      );
       x = x + arrRectSize;
     }
     drawArray(inorderArrayData);
@@ -207,22 +208,26 @@ class Tree {
 
     let x = xArr;
     for (let i = 0; i < postorder.length; i++) {
-      postorderArrayData.push(new ArrayElement(postorder[i].value, postorder[i].index, x, yArr));
+      postorderArrayData.push(
+        new ArrayElement(postorder[i].value, postorder[i].index, x, yArr)
+      );
       x = x + arrRectSize;
     }
     drawArray(postorderArrayData);
   }
-
-};
-
+}
 
 /*
 Create a visual representation of the binary tree.
 */
 function drawBinaryTree(tree) {
-  let containerWidth = Math.max(minWidth, tree.width * (2*radius + xSpacing));
+  let containerWidth = Math.max(minWidth, tree.width * (2 * radius + xSpacing));
   let containerHeight = (tree.height + 2) * ySpacing;
-  let treeContainer = createContainer("binary-tree-visual", containerWidth, containerHeight);
+  let treeContainer = createContainer(
+    "binary-tree-visual",
+    containerWidth,
+    containerHeight
+  );
   let preorder = [];
   let stack = [];
 
@@ -237,99 +242,139 @@ function drawBinaryTree(tree) {
     let rightChild = curNode.right;
     let leftChild = curNode.left;
     if (!jQuery.isEmptyObject(rightChild)) {
-      rightChild.cx = curNode.cx + containerWidth / Math.pow(2, curDepth+2);
+      rightChild.cx = curNode.cx + containerWidth / Math.pow(2, curDepth + 2);
       rightChild.cy = curNode.cy + ySpacing;
-      treeContainer.append("line").call(createLineAttr, lineColor, curNode.cx, curNode.cy, rightChild.cx, rightChild.cy);
-      stack.push([rightChild, curDepth+1]);
+      treeContainer
+        .append("line")
+        .call(
+          createLineAttr,
+          lineColor,
+          curNode.cx,
+          curNode.cy,
+          rightChild.cx,
+          rightChild.cy
+        );
+      stack.push([rightChild, curDepth + 1]);
     }
     if (!jQuery.isEmptyObject(leftChild)) {
-      leftChild.cx = curNode.cx - containerWidth / Math.pow(2, curDepth+2);
+      leftChild.cx = curNode.cx - containerWidth / Math.pow(2, curDepth + 2);
       leftChild.cy = curNode.cy + ySpacing;
-      treeContainer.append("line").call(createLineAttr, lineColor, curNode.cx, curNode.cy, leftChild.cx, leftChild.cy);
-      stack.push([leftChild, curDepth+1]);
+      treeContainer
+        .append("line")
+        .call(
+          createLineAttr,
+          lineColor,
+          curNode.cx,
+          curNode.cy,
+          leftChild.cx,
+          leftChild.cy
+        );
+      stack.push([leftChild, curDepth + 1]);
     }
     preorder.push(curNode);
-  };
+  }
 
-  treeContainer.selectAll("circle")
-  .data(preorder)
-  .enter()
-  .append("circle")
-  .style("stroke", lineColor)
-  .call(circleAttr);
+  treeContainer
+    .selectAll("circle")
+    .data(preorder)
+    .enter()
+    .append("circle")
+    .style("stroke", lineColor)
+    .call(circleAttr);
 
-  treeContainer.selectAll("circle").raise().on("click", addHighlight);
+  treeContainer
+    .selectAll("circle")
+    .raise()
+    .on("click", addHighlight);
 
-  treeContainer.selectAll("text.circle")
-  .data(preorder)
-  .enter()
-  .append("text")
-  .attr("class", "circle")
-  .attr("x", d => d.cx - (d.value.toString().length * 4))
-  .attr("y", 0)
-  .text(d => d.value)
-  .transition()
-  .duration(100)
-  .attr("y", d => d.cy + 5)
-  .call(textAttr, regFillText, "sans-serif", "1em");
+  treeContainer
+    .selectAll("text.circle")
+    .data(preorder)
+    .enter()
+    .append("text")
+    .attr("class", "circle")
+    .attr("x", d => d.cx - d.value.toString().length * 4)
+    .attr("y", 0)
+    .text(d => d.value)
+    .transition()
+    .duration(100)
+    .attr("y", d => d.cy + 5)
+    .call(textAttr, regFillText, "sans-serif", "1em");
 
-  treeContainer.selectAll("text.circle").raise().on("click", addHighlight);
+  treeContainer
+    .selectAll("text.circle")
+    .raise()
+    .on("click", addHighlight);
 
-  d3.select("#binary-tree-visual").attr("align","center");
+  d3.select("#binary-tree-visual").attr("align", "center");
 }
-
 
 /*
 Create a visual representation of a list of ArrayElement objects.
 */
 function drawArray(arrayData) {
-  let arrayContainer = createContainer("array-visual", arrayData.length * 60, 100);
+  let arrayContainer = createContainer(
+    "array-visual",
+    arrayData.length * 60,
+    100
+  );
 
-  d3.select("#array-visual").attr("align","center");
+  d3.select("#array-visual").attr("align", "center");
 
-  arrayContainer.selectAll("rect")
-  .data(arrayData)
-  .enter()
-  .append("rect")
-  .on("click", addHighlight)
-  .attr("x", d => d.x)
-  .attr("y", d => d.y)
-  .attr("width", d => d.width)
-  .attr("height", d => d.height)
-  .attr("fill", d => d.color)
-  .attr("stroke", lineColor);
+  arrayContainer
+    .selectAll("rect")
+    .data(arrayData)
+    .enter()
+    .append("rect")
+    .on("click", addHighlight)
+    .attr("x", d => d.x)
+    .attr("y", d => d.y)
+    .attr("width", d => d.width)
+    .attr("height", d => d.height)
+    .attr("fill", d => d.color)
+    .attr("stroke", lineColor);
 
-  arrayContainer.selectAll("text.rect")
-  .data(arrayData)
-  .enter()
-  .append("text")
-  .attr("class", "rect")
-  .on("click", addHighlight)
-  .attr("x", d => d.x + (d.width / 2) - (d.value.toString().length*4))
-  .attr("y", d => d.y + 30)
-  .text(d => d.value)
-  .call(textAttr, regFillText, "sans-serif", "1em");
+  arrayContainer
+    .selectAll("text.rect")
+    .data(arrayData)
+    .enter()
+    .append("text")
+    .attr("class", "rect")
+    .on("click", addHighlight)
+    .attr("x", d => d.x + d.width / 2 - d.value.toString().length * 4)
+    .attr("y", d => d.y + 30)
+    .text(d => d.value)
+    .call(textAttr, regFillText, "sans-serif", "1em");
 
-  arrayContainer.selectAll("text.index")
-  .data(arrayData)
-  .enter()
-  .append("text")
-  .attr("class", "index")
-  .text((d, i) => `[ ${i} ]`)
-  .attr("x", d => d.x + 15)
-  .attr("y", d => d.y - 15)
-  .call(textAttr, regFillText, "sans-serif", "15px");
-};
+  arrayContainer
+    .selectAll("text.index")
+    .data(arrayData)
+    .enter()
+    .append("text")
+    .attr("class", "index")
+    .text((d, i) => `[ ${i} ]`)
+    .attr("x", d => d.x + 15)
+    .attr("y", d => d.y - 15)
+    .call(textAttr, regFillText, "sans-serif", "15px");
+}
 
 function circleAttr(selection) {
   selection
-    .attr("cx", function(c) { return c.cx })
+    .attr("cx", function(c) {
+      return c.cx;
+    })
     .attr("cy", 0)
-    .attr("r", function(c) { return c.radius })
-    .attr("fill", function(c) { return c.fill })
+    .attr("r", function(c) {
+      return c.radius;
+    })
+    .attr("fill", function(c) {
+      return c.fill;
+    })
     .transition()
     .duration(100)
-    .attr("cy", function(c) { return c.cy })
+    .attr("cy", function(c) {
+      return c.cy;
+    });
 }
 
 function textAttr(selection, fill, fontFamily, fontSize) {
@@ -341,41 +386,53 @@ function textAttr(selection, fill, fontFamily, fontSize) {
 
 function createLineAttr(selection, stroke, x1, y1, x2, y2) {
   selection
-  .style("stroke", stroke)
-  .attr("x1", x1)
-  .attr("y1", 0)
-  .attr("x2", x2)
-  .attr("y2", 0)
-  .transition()
-  .duration(100)
-  .attr("y1", y1)
-  .attr("y2", y2)
+    .style("stroke", stroke)
+    .attr("x1", x1)
+    .attr("y1", 0)
+    .attr("x2", x2)
+    .attr("y2", 0)
+    .transition()
+    .duration(100)
+    .attr("y1", y1)
+    .attr("y2", y2);
 }
 
 function addHighlight(data) {
   removeHighlight();
-  function indexMatch(d) {return data.index == d.index ? this : null};
+  function indexMatch(d) {
+    return data.index == d.index ? this : null;
+  }
 
-  d3.selectAll("circle").select(indexMatch).attr("fill", highlightFill);
-  d3.selectAll("rect").select(indexMatch).attr("fill", highlightFill);
-  d3.selectAll("text.circle").select(indexMatch).attr("fill", highlightFillText);
-  d3.selectAll("text.rect").select(indexMatch).attr("fill", highlightFillText);
+  d3.selectAll("circle")
+    .select(indexMatch)
+    .attr("fill", highlightFill);
+  d3.selectAll("rect")
+    .select(indexMatch)
+    .attr("fill", highlightFill);
+  d3.selectAll("text.circle")
+    .select(indexMatch)
+    .attr("fill", highlightFillText);
+  d3.selectAll("text.rect")
+    .select(indexMatch)
+    .attr("fill", highlightFillText);
 }
 
 function removeHighlight() {
-  d3.selectAll("circle").attr("fill", regFill)
-  d3.selectAll("rect").attr("fill", regFill)
-  d3.selectAll("text.circle").attr("fill", regFillText)
+  d3.selectAll("circle").attr("fill", regFill);
+  d3.selectAll("rect").attr("fill", regFill);
+  d3.selectAll("text.circle").attr("fill", regFillText);
   d3.selectAll("text.rect").attr("fill", regFillText);
 }
 
 function createContainer(id, width, height) {
+  d3.select(`div#${id}`)
+    .selectAll("svg")
+    .remove();
 
-  d3.select(`div#${id}`).selectAll('svg').remove();
-
-  let container = d3.select(`div#${id}`)
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height)
+  let container = d3
+    .select(`div#${id}`)
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
   return container;
 }
