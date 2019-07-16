@@ -1,11 +1,11 @@
 // Define colors
-var regFill = "#b7d7e8";
-var highlightFill = "#8d9db6";
+const regFill = "#b7d7e8";
+const highlightFill = "#8d9db6";
 
-var regFillText = "#3b3a30";
-var highlightFillText = "#f0f0f0";
+const regFillText = "#3b3a30";
+const highlightFillText = "#f0f0f0";
 
-var lineColor = "#3b3a30";
+const lineColor = "#3b3a30";
 
 // Define dimensions
 const xSpacing = 15; // minimum space between two horizontally adjacent nodes
@@ -16,6 +16,9 @@ const radius = 30;
 const xArr = 5;
 const yArr = 30;
 const arrRectSize = 50;
+
+// Maintain the index of the highlighted element
+var highlightIndex = 0;
 
 /*
 Element of an array.
@@ -116,6 +119,7 @@ class Tree {
       x = x + arrRectSize;
     }
     drawArray(serializationArrayData);
+    addHighlight(highlightIndex);
   }
 
   /*
@@ -151,6 +155,7 @@ class Tree {
       x = x + arrRectSize;
     }
     drawArray(preorderArrayData);
+    addHighlight(highlightIndex);
   }
 
   /*
@@ -179,6 +184,7 @@ class Tree {
       x = x + arrRectSize;
     }
     drawArray(inorderArrayData);
+    addHighlight(highlightIndex);
   }
 
   /*
@@ -214,6 +220,7 @@ class Tree {
       x = x + arrRectSize;
     }
     drawArray(postorderArrayData);
+    addHighlight(highlightIndex);
   }
 }
 
@@ -285,7 +292,9 @@ function drawBinaryTree(tree) {
   treeContainer
     .selectAll("circle")
     .raise()
-    .on("click", addHighlight);
+    .on("click", function(d) {
+      addHighlight(d.index);
+    });
 
   treeContainer
     .selectAll("text.circle")
@@ -306,9 +315,12 @@ function drawBinaryTree(tree) {
   treeContainer
     .selectAll("text.circle")
     .raise()
-    .on("click", addHighlight);
+    .on("click", function(d) {
+      addHighlight(d.index);
+    });
 
   d3.select("#binary-tree-visual").attr("align", "center");
+  addHighlight(highlightIndex);
 }
 
 /*
@@ -319,7 +331,7 @@ Adaptively adjust the horizontal positions of the text elements.
 function drawArray(arrayData) {
   let arrayContainer = createContainer(
     "array-visual",
-    arrayData.length * arrRectSize + 2*xArr,
+    arrayData.length * arrRectSize + 2 * xArr,
     100
   );
 
@@ -330,7 +342,9 @@ function drawArray(arrayData) {
     .data(arrayData)
     .enter()
     .append("rect")
-    .on("click", addHighlight)
+    .on("click", function(d) {
+      addHighlight(d.index);
+    })
     .attr("x", d => d.x)
     .attr("y", d => d.y)
     .attr("width", d => d.width)
@@ -344,7 +358,9 @@ function drawArray(arrayData) {
     .enter()
     .append("text")
     .attr("class", "rect")
-    .on("click", addHighlight)
+    .on("click", function(d) {
+      addHighlight(d.index);
+    })
     .text(d => d.value)
     .call(textAttr, regFillText, "sans-serif", "1em")
     .attr("x", function(d) {
@@ -408,10 +424,11 @@ function createLineAttr(selection, stroke, x1, y1, x2, y2) {
     .attr("y2", y2);
 }
 
-function addHighlight(data) {
+function addHighlight(indexSelected) {
   removeHighlight();
+  highlightIndex = indexSelected;
   function indexMatch(d) {
-    return data.index == d.index ? this : null;
+    return d.index == highlightIndex? this : null;
   }
 
   d3.selectAll("circle")

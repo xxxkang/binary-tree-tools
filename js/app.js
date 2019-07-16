@@ -1,4 +1,4 @@
-var input; // want the input to be a global variable
+var input; // The input array
 var tree = {};
 
 /*
@@ -51,6 +51,7 @@ function createBinaryTreeAndArr() {
   getInput();
   tree = new Tree(input);
   if (!jQuery.isEmptyObject(tree)) {
+    highlightIndex = 0;
     tree.drawSerialization();
     drawBinaryTree(tree);
   }
