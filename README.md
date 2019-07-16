@@ -26,7 +26,8 @@ I was having a discussion with my friends after a weekly contest on LeetCode and
 
 ## Technologies
 
-[Bootstrap](https://getbootstrap.com/), [D3.js](https://github.com/d3/d3), [jQuery](https://jquery.com/)
+[Bootstrap](https://getbootstrap.com/), [D3.js](https://d3js.org/), [jQuery](https://jquery.com/)
 
 ## Acknowledgement
-- This app was based on: https://anacsanchez.github.io/Binary-Tree-Visualization/
+
+This app was based on: https://anacsanchez.github.io/Binary-Tree-Visualization/
