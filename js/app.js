@@ -75,7 +75,7 @@ function createPostorder() {
 }
 
 // Default values
-input = [1, 2, 5, 14, , 132, 429];
+input = [1, 1, 2, 5, 14, 42, ,132, ,429, ,1430, 4862, 16796, 58786];
 let testInput = document.getElementById("array-input");
 testInput.value = input;
 createBinaryTreeAndArr();
