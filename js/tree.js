@@ -13,7 +13,7 @@ const minWidth = 400;
 const ySpacing = 100;
 const radius = 30;
 
-const xArr = 2;
+const xArr = 5;
 const yArr = 30;
 const arrRectSize = 50;
 
@@ -293,13 +293,15 @@ function drawBinaryTree(tree) {
     .enter()
     .append("text")
     .attr("class", "circle")
-    .attr("x", d => d.cx - d.value.toString().length * 4)
-    .attr("y", 0)
     .text(d => d.value)
+    .call(textAttr, regFillText, "sans-serif", "1em")
+    .attr("x", function(d) {
+      return d.cx - this.getBBox().width / 2;
+    })
+    .attr("y", 0)
     .transition()
     .duration(100)
-    .attr("y", d => d.cy + 5)
-    .call(textAttr, regFillText, "sans-serif", "1em");
+    .attr("y", d => d.cy + 5);
 
   treeContainer
     .selectAll("text.circle")
@@ -311,11 +313,13 @@ function drawBinaryTree(tree) {
 
 /*
 Create a visual representation of a list of ArrayElement objects.
+
+Adaptively adjust the horizontal positions of the text elements.
 */
 function drawArray(arrayData) {
   let arrayContainer = createContainer(
     "array-visual",
-    arrayData.length * 60,
+    arrayData.length * arrRectSize + 2*xArr,
     100
   );
 
@@ -341,10 +345,12 @@ function drawArray(arrayData) {
     .append("text")
     .attr("class", "rect")
     .on("click", addHighlight)
-    .attr("x", d => d.x + d.width / 2 - d.value.toString().length * 4)
-    .attr("y", d => d.y + 30)
     .text(d => d.value)
-    .call(textAttr, regFillText, "sans-serif", "1em");
+    .call(textAttr, regFillText, "sans-serif", "1em")
+    .attr("x", function(d) {
+      return d.x + (arrRectSize - this.getBBox().width) / 2;
+    })
+    .attr("y", d => d.y + 30);
 
   arrayContainer
     .selectAll("text.index")
@@ -353,9 +359,14 @@ function drawArray(arrayData) {
     .append("text")
     .attr("class", "index")
     .text((d, i) => `[ ${i} ]`)
-    .attr("x", d => d.x + 15)
-    .attr("y", d => d.y - 15)
     .call(textAttr, regFillText, "sans-serif", "15px");
+
+  arrayContainer
+    .selectAll("text.index")
+    .attr("x", function(d) {
+      return d.x + (arrRectSize - this.getBBox().width) / 2;
+    })
+    .attr("y", d => d.y - 15);
 }
 
 function circleAttr(selection) {
