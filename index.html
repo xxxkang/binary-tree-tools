@@ -1,22 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="style.css"></link>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- <link rel="stylesheet" href="style.css"></link> -->
     <title>Binary Tree Tools</title>
   </head>
+
   <body>
-    <header>
-      <div id="title">Binary Tree Tools</div>
-      <label>Enter the array representation of binary tree:</label><br />
-      <input type="text" id="array-input" name="array" />
-      <div id="options">
-        <button onclick="createBinaryTreeAndArr()">Create Binary Tree</button>
-        <button onclick="createPreorder()">Preorder</button>
+    <div class="jumbotron text-center">
+      <h1>Binary Tree Tools</h1>
+      <div class="row mt-5">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+            <div class="input-group">
+              <input type="text" class="form-control rounded-left" id="array-input" placeholder="Enter the array representation of binary tree">
+              <div class="input-group-append">
+                <button class="btn btn-secondary" type="button" id="create-tree" onclick=createBinaryTreeAndArr()>Create Binary Tree</button>
+              </div>
+              <button type="button" class="btn btn-outline-secondary dropdown-toggle rounded-right" id="choose-traversal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Create Traversal
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" onclick=createPreorder()>Preorder</a>
+                <a class="dropdown-item" href="#" onclick=createInorder()>Inorder</a>
+                <a class="dropdown-item" href="#" onclick=createPostorder()>Postorder</a>
+              </div>
+            </div>
+        </div>
+        <div class="col-lg-3"></div>
       </div>
-    </header>
-    <div id="array-visual"></div>
-    <div id="binary-tree-visual"></div>
+    </div>
+
+    <div id="array-visual" class="container-fluid mt-5"></div>
+    <div id="binary-tree-visual" class="container-fluid mt-1"></div>
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="./js/tree.js"></script>
     <script src="./js/app.js"></script>

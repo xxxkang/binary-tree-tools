@@ -1,6 +1,27 @@
 var input; // want the input to be a global variable
 var tree = {};
 
+/*
+Trigger input when hitting Enter.
+*/
+document.getElementById("array-input").addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+   event.preventDefault();
+   document.getElementById("create-tree").click();
+  }
+});
+
+/* 
+Dropdown botton behavior.
+*/
+$('.dropdown-item').click(function(event) {
+  var choice = event.currentTarget;
+  $('#choose-traversal').text(choice.text + ' Traversal');
+});
+
+/*
+Reset SVG created by D3.
+*/
 function reset() {
   d3.selectAll('svg').remove();
 }
@@ -32,6 +53,18 @@ function createBinaryTreeAndArr() {
 function createPreorder() {
   if (!jQuery.isEmptyObject(tree)) {
     tree.drawPreorder();
+  }
+}
+
+function createInorder() {
+  if (!jQuery.isEmptyObject(tree)) {
+    tree.drawInorder();
+  }
+}
+
+function createPostorder() {
+  if (!jQuery.isEmptyObject(tree)) {
+    tree.drawPostorder();
   }
 }
 

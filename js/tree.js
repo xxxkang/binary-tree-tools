@@ -1,15 +1,17 @@
 // Define colors
-var regFill = "lightblue";
-var highlightFill = "blue";
+var regFill = "#b7d7e8";
+var highlightFill = "#8d9db6";
 
-var regFillText = "black"
-var highlightFillText = "white"
+var regFillText = "#3b3a30";
+var highlightFillText = "#f0f0f0";
+
+var lineColor = "#3b3a30";
 
 // Define dimensions
-const xSpacing = 10; // minimum space between two horizontally adjacent nodes
+const xSpacing = 15; // minimum space between two horizontally adjacent nodes
 const minWidth = 400;
 const ySpacing = 100;
-const radius = 20;
+const radius = 30;
 
 const xArr = 2;
 const yArr = 30;
@@ -83,7 +85,7 @@ class Tree {
       this.height = Math.max(this.height, curDepth);
       // Construct left child of current node
       if (isNaN(this.serialization[i])) {
-        curNode.left = null;
+        curNode.left = {};
       }
       else {
         node = new Node(this.serialization[i], i, curDepth+1);
@@ -92,7 +94,7 @@ class Tree {
       }
       // Construct right child of current node
       if (isNaN(this.serialization[i+1])) {
-        curNode.right = null;
+        curNode.right = {};
       }
       else {
         node = new Node(this.serialization[i+1], i+1, curDepth+1);
@@ -149,8 +151,68 @@ class Tree {
       preorderArrayData.push(new ArrayElement(preorder[i].value, preorder[i].index, x, yArr));
       x = x + arrRectSize;
     }
-  drawArray(preorderArrayData);
+    drawArray(preorderArrayData);
   };
+
+  /*
+  Create a visualization of inorder tree traversal.
+  */
+  drawInorder() {
+    let inorderArrayData = [];
+    let inorder = [];
+    let stack = [];
+    let curNode = this.root;
+    while (!jQuery.isEmptyObject(curNode) || stack.length > 0) {
+      while (!jQuery.isEmptyObject(curNode)) {
+        stack.push(curNode);
+        curNode = curNode.left;
+      }
+      curNode = stack.pop();
+      inorder.push(curNode);
+      curNode = curNode.right;
+    }
+
+    let x = xArr;
+    for (let i = 0; i < inorder.length; i++) {
+      inorderArrayData.push(new ArrayElement(inorder[i].value, inorder[i].index, x, yArr));
+      x = x + arrRectSize;
+    }
+    drawArray(inorderArrayData);
+  }
+
+  /*
+  Create a visualization of postorder tree traversal
+
+  Implement iterative postorder traversal usng two stacks.
+  */
+  drawPostorder() {
+    let postorderArrayData = [];
+    let postorder = [];
+    let stack1 = [];
+    let stack2 = [];
+    let curNode = this.root;
+    stack1.push(curNode);
+    while (stack1.length > 0) {
+      curNode = stack1.pop();
+      stack2.push(curNode);
+
+      if (!jQuery.isEmptyObject(curNode.left)) stack1.push(curNode.left);
+      if (!jQuery.isEmptyObject(curNode.right)) stack1.push(curNode.right);
+    }
+
+    while (stack2.length > 0) {
+      curNode = stack2.pop();
+      postorder.push(curNode);
+    }
+
+    let x = xArr;
+    for (let i = 0; i < postorder.length; i++) {
+      postorderArrayData.push(new ArrayElement(postorder[i].value, postorder[i].index, x, yArr));
+      x = x + arrRectSize;
+    }
+    drawArray(postorderArrayData);
+  }
+
 };
 
 
@@ -166,7 +228,7 @@ function drawBinaryTree(tree) {
 
   if (!jQuery.isEmptyObject(tree.root)) {
     tree.root.cx = containerWidth / 2;
-    tree.root.cy = radius;
+    tree.root.cy = 2 * radius;
     stack.push([tree.root, 0]); // [node, depth]
   }
 
@@ -177,13 +239,13 @@ function drawBinaryTree(tree) {
     if (!jQuery.isEmptyObject(rightChild)) {
       rightChild.cx = curNode.cx + containerWidth / Math.pow(2, curDepth+2);
       rightChild.cy = curNode.cy + ySpacing;
-      treeContainer.append("line").call(createLineAttr, "black", curNode.cx, curNode.cy, rightChild.cx, rightChild.cy);
+      treeContainer.append("line").call(createLineAttr, lineColor, curNode.cx, curNode.cy, rightChild.cx, rightChild.cy);
       stack.push([rightChild, curDepth+1]);
     }
     if (!jQuery.isEmptyObject(leftChild)) {
       leftChild.cx = curNode.cx - containerWidth / Math.pow(2, curDepth+2);
       leftChild.cy = curNode.cy + ySpacing;
-      treeContainer.append("line").call(createLineAttr, "black", curNode.cx, curNode.cy, leftChild.cx, leftChild.cy);
+      treeContainer.append("line").call(createLineAttr, lineColor, curNode.cx, curNode.cy, leftChild.cx, leftChild.cy);
       stack.push([leftChild, curDepth+1]);
     }
     preorder.push(curNode);
@@ -193,6 +255,7 @@ function drawBinaryTree(tree) {
   .data(preorder)
   .enter()
   .append("circle")
+  .style("stroke", lineColor)
   .call(circleAttr);
 
   treeContainer.selectAll("circle").raise().on("click", addHighlight);
@@ -211,6 +274,8 @@ function drawBinaryTree(tree) {
   .call(textAttr, regFillText, "sans-serif", "1em");
 
   treeContainer.selectAll("text.circle").raise().on("click", addHighlight);
+
+  d3.select("#binary-tree-visual").attr("align","center");
 }
 
 
@@ -232,7 +297,7 @@ function drawArray(arrayData) {
   .attr("width", d => d.width)
   .attr("height", d => d.height)
   .attr("fill", d => d.color)
-  .attr("stroke", "black");
+  .attr("stroke", lineColor);
 
   arrayContainer.selectAll("text.rect")
   .data(arrayData)
