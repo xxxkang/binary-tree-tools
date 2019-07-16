@@ -1,6 +1,6 @@
 # Binary Tree Visualization Tools
 
-An interactive tool to visually display a binary tree represented by a serialized array.
+An interactive tool to visually display a binary tree represented by a array serialization used by LeetCode. The purpose is to help coders visualize tree structure in the process of problem solving.
 
 ## Link
 
