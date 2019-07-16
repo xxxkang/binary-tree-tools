@@ -78,7 +78,7 @@ class Tree {
         .exit().remove();
     };
     this.createBinaryTree = function (arr) {
-      treeContainer = createContainer("binary-tree", arr);
+      treeContainer = createContainer("binary-tree-visual", arr);
       start = treeContainer.attr("width") / 2;
       let containerWidth = treeContainer.attr("width");
       let i = 1;
@@ -86,6 +86,9 @@ class Tree {
       let node = null;
       // Create the first node, the root node, if the arr is non-empty
       if (arr.length > 0) {
+        if (isNaN(arr[0])) {
+          return 
+        }
         node = new Node(arr[0], 0, 0);
         node.cx = start;
         node.cy = radius;
@@ -183,9 +186,6 @@ class Tree {
         .raise();
       this.nodes.call(circleAttr);
     };
-    this.size = function () {
-      return d3.selectAll("circle").nodes().length;
-    };
   }
 }
 
@@ -276,7 +276,7 @@ function createLineAttr(selection, stroke, x1, y1, x2, y2) {
 
 function addHighlight(data, index) {
   removeHighlight();
-  function indexMatch(d, i) {return i == index ? this : null};
+  function indexMatch(data, i) {return i == index ? this : null};
 
   d3.selectAll("circle").select(indexMatch).attr("fill", highlightFill);
   d3.selectAll("rect").select(indexMatch).attr("fill", highlightFill);

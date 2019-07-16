@@ -1,29 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css"></link>
-    <title>Binary Tree Visualization</title>
+    <title>Binary Tree Tools</title>
   </head>
   <body>
     <header>
-      <div id="title">Binary Tree Visualization</div>
-      <label>Enter an array:</label><br />
+      <div id="title">Binary Tree Tools</div>
+      <label>Enter the array representation of binary tree:</label><br />
       <input type="text" id="array-input" name="array" />
       <div id="options">
-        <button onclick="treeAndArray()">Binary Tree (As Is)</button>
-        <button onclick="heapify()">Max-Heap</button>
-        <button onclick="createBinarySearchTree()">Binary Search Tree</button>
+        <button onclick="createBinaryTreeAndArr()">Create Binary Tree</button>
+        <button onclick="createPreorder()">Preorder</button>
       </div>
     </header>
-    <div id="blurb">
-      <div id="visual-title">Binary Tree and Array</div>
-      <div id="instructions">Click a value in the binary tree or array to highlight its corresponding location in the data structure.</div>
-    </div>
-    <div id="binary-tree"></div>
     <div id="array-visual"></div>
+    <div id="binary-tree-visual"></div>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="./js/nodes.js"></script>
-    <script src="./js/heap.js"></script>
+    <script src="./js/tree.js"></script>
     <script src="./js/app.js"></script>
   </body>
 </html>

@@ -13,6 +13,8 @@ body {
 
 input {
   font-size: 1.1em;
+  margin-top: 1em;
+  width: 400px;
 }
 
 label  {
