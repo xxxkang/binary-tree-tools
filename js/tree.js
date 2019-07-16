@@ -306,10 +306,11 @@ function removeHighlight() {
 
 function createContainer(id, width, height) {
 
+  d3.select(`div#${id}`).selectAll('svg').remove();
+
   let container = d3.select(`div#${id}`)
     .append('svg')
     .attr('width', width)
     .attr('height', height)
-
   return container;
 }
