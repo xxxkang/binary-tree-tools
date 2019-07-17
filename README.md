@@ -26,4 +26,6 @@ Note that the non-numeric element will be interpreted as a missing child node.
 
 ## Acknowledgement
 
-This app was based on: https://anacsanchez.github.io/Binary-Tree-Visualization/
+This idea was motivated by LeetCode problem [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/).
+
+The initial skeleton of this app was based on: https://anacsanchez.github.io/Binary-Tree-Visualization/
